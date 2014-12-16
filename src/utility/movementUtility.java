@@ -26,20 +26,11 @@ final public class movementUtility {
 		//Get's the speed
 		float speed = calculateSpeed(magnitude);
 	
-		//Use get's the angle between the X and Y values (THey are passed into the method as
-		// End.x-start.x, End.y - start.y)
-		double angle = Math.toDegrees( Math.atan2(y, x)); //angle of right triangle at origin.
+		float hypRatio = speed/magnitude; 
 		
-		//then we just pultiple the hypotenuse (max speed) by the cos/sin(theta) to get proper sizes
-		double adjustedHeight = Math.abs(Math.sin(angle) * (double)speed);
-		double adjustedWidth = Math.abs((Math.cos(angle) *(double)speed));
+		FloatPoint r_val = new FloatPoint(x*hypRatio, y*hypRatio);
 		
-		FloatPoint r_val = new FloatPoint();
-		//Basically to see if our newly found forces will be applied in the negative or positive.
-		r_val.X = (float)adjustedHeight * ((x < 0) ? -1 : 1); //we want the proper direction
-		r_val.Y = (float)adjustedWidth  * ((y < 0) ? -1 : 1);
-		
-		
+
 		return r_val;
 	}
 	
