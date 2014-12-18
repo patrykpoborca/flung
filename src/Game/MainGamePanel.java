@@ -40,13 +40,13 @@ public class MainGamePanel extends SurfaceView implements
 	
 	//end of movement related stuff
 	
-	public GameObject playerOne;
+	public FlungObject playerOne;
 	
 	private float MAGNITUDE;
 
 	public MainGamePanel(Context context) {
-		
 		super(context);
+		
 		this.PAUSED = 0;
 		// adding the callback (this) to the surface holder to intercept events
 		getHolder().addCallback(this);
@@ -58,21 +58,29 @@ public class MainGamePanel extends SurfaceView implements
 		
 		// make the GamePanel focusable so it can handle events
 		setFocusable(true);
+		GameManager.startTimer_Line();
 	}
 	
 	
 	private void setupGame()
 	{
-		playerOne = new GameObject(BitmapFactory.decodeResource(getResources(), R.drawable.droid_1), 50, 50);
+		playerOne = new FlungObject(BitmapFactory.decodeResource(getResources(), R.drawable.droid_1), 50, 50);
 		//playerOne.setConstantForceY(GameConstants.gravity);
-		//GameConstants.gameObjects.add(new GameObject(BitmapFactory.decodeResource(getResources(), R.drawable.droid_1), 200, 200));
-		GameConstants.gameObjects.add(new ExitBorders(0, GameConstants.screenSizeY,
+		//GameConstants.floatingStructures.add(new GameObject(BitmapFactory.decodeResource(getResources(), R.drawable.droid_1), 200, 200));
+		
+		
+		//setting up borders
+		//bottom
+		GameConstants.borders.add(new ExitBorders(0, GameConstants.screenSizeY,
 						(float) GameConstants.screenSizeX, 10f));
-		GameConstants.gameObjects.add(new ExitBorders(GameConstants.screenSizeX, GameConstants.screenSizeY,
+		//right
+		GameConstants.borders.add(new ExitBorders(GameConstants.screenSizeX, 0,
 				10f, (float) GameConstants.screenSizeY));
-		GameConstants.gameObjects.add(new ExitBorders(0, 0,
+		//top
+		GameConstants.borders.add(new ExitBorders(0, 0,
 				(float) GameConstants.screenSizeX, (float) 10f));
-		GameConstants.gameObjects.add(new ExitBorders(0, 0,
+		//left
+		GameConstants.borders.add(new ExitBorders(0, 0,
 				10f, (float) GameConstants.screenSizeY));
 
 		
@@ -149,10 +157,14 @@ public class MainGamePanel extends SurfaceView implements
 		} if (event.getAction() == MotionEvent.ACTION_UP) {
 			//release gesture
 			this.PAUSED= 0;
-			FloatPoint tempPoint =
-			movementUtility.calculateSpeedVector(this.MAGNITUDE, this.currentX-this.prevX, this.currentY-this.prevY);
-			playerOne.setVelocityX(tempPoint.X);
-			playerOne.setVelocityY(tempPoint.Y);
+			if(this.MAGNITUDE >= 2f)
+			{
+				FloatPoint tempPoint =
+				movementUtility.calculateSpeedVector(this.MAGNITUDE, this.currentX-this.prevX, this.currentY-this.prevY);
+				playerOne.setVelocityX(tempPoint.X);
+				playerOne.setVelocityY(tempPoint.Y);
+			}
+			
 			
 			
 		}
@@ -164,9 +176,9 @@ public class MainGamePanel extends SurfaceView implements
 		if(this.PAUSED == 2)
 			this.drawLine(canvas);
 		playerOne.render(canvas);
-		for(int a=0; a < GameConstants.gameObjects.size(); a++)
+		for(int a=0; a < GameConstants.floatingStructures.size(); a++)
 		{
-			GameConstants.gameObjects.get(a).render(canvas);//renders each item to the canvas
+			GameConstants.floatingStructures.get(a).render(canvas);//renders each item to the canvas
 		}
 	}
 
@@ -186,14 +198,42 @@ public class MainGamePanel extends SurfaceView implements
 		if(this.PAUSED==0)
 			playerOne.update();
 		// Update 
-		for(int a=0; a < GameConstants.gameObjects.size(); a++)
+		for(int a=0; a < GameConstants.floatingStructures.size(); a++)
 		{
+			
+			if(GameConstants.floatingStructures.get(a).outOfBounds())
+			{
+				//Log.d("Finding SELF", "Working...  " + GameConstants.floatingStructures.size());
+				int exitVal= -1;
+				for(int iterator=0; iterator < GameConstants.floatingStructures.size(); iterator++)
+				{
+					exitVal = iterator;
+					if(GameConstants.floatingStructures.get(iterator).equals(GameConstants.floatingStructures.get(a)))
+						break;
+					if(iterator +1 == GameConstants.floatingStructures.size())
+						exitVal = -1;
+				}
+				if(exitVal != -1)
+				{
+				GameConstants.floatingStructures.remove(exitVal);
+				Log.d("REMOVING SELF", "IT WORKED? " + GameConstants.floatingStructures.size());
+				continue;
+				}
+			}
+			
+			
 			if(this.PAUSED==0)
-				GameConstants.gameObjects.get(a).update();//updates all objects
-			if(playerOne.collidedWith(GameConstants.gameObjects.get(a)))
-				GameConstants.gameObjects.get(a).executeFunctions(playerOne, this);
+				GameConstants.floatingStructures.get(a).update();//updates all objects
+			if(GameConstants.floatingStructures.get(a).collidedWith(this.playerOne))
+			{
+				Log.d("COLLISION", "YELLOW COLLISION!");
+			}
 			
-			
+		}
+		for(int a=0; a < GameConstants.borders.size(); a++)
+		{
+			if(playerOne.collidedWith(GameConstants.borders.get(a)))
+				GameConstants.borders.get(a).executeFunctions(playerOne, this);
 		}
 		
 	}

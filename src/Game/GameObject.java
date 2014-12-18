@@ -9,13 +9,14 @@ import android.view.View;
 import utility.FloatPoint;
 import utility.FloatRect;
 import utility.GameConstants;
+import utility.MetaGameData;
 import meta.states.*;
 
 public class GameObject {
 
 	protected Bitmap bitmap;	// the actual bitmap
-	protected int x;			// the X coordinate
-	protected int y;			// the Y coordinate
+	protected float x;			// the X coordinate
+	protected float y;			// the Y coordinate
 	protected boolean touched;	//  is touched
 	protected float velocityX; //current velocity...
 	protected float velocityY;
@@ -24,7 +25,15 @@ public class GameObject {
 	public FloatRect collisionBox; 
 	public ArrayList<MetaState> listOfCommands = new ArrayList<MetaState>();
 	
+	//accessors
+	public float getX(){return this.x;}
+	public float getY(){return this.y;}
+	public void setX(float x){this.x = x;}
+	public void sety(float y){this.y = y;}
+	public float getHeight(){return ((float)this.bitmap.getHeight());}
+	public float getWidth(){return ((float)this.bitmap.getWidth());}
 	
+	//end of accessors
 	public GameObject(){}
 	
 	public GameObject(Bitmap bitmap, int x, int y)
@@ -83,13 +92,20 @@ public class GameObject {
 		canvas.drawBitmap(bitmap, x - (bitmap.getWidth() / 2), y - (bitmap.getHeight() / 2), null);
 	}
 	
+	public boolean outOfBounds()
+	{
+		return (this.getX() + this.getWidth()<0) || 
+				(this.getY() + this.getHeight() <0) ||
+				(this.getY() > GameConstants.screenSizeY);
+	}
+	
 	public void update()
 	{
 		this.velocityX += this.constantForceX;
 		this.velocityY += this.constantForceY;
 		
-		this.x += this.velocityX;
-		this.y += this.velocityY;
+		this.x += this.velocityX * MetaGameData.gameClock;
+		this.y += this.velocityY * MetaGameData.gameClock;
 	}
 	
 	/**

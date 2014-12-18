@@ -10,9 +10,5 @@ public class FlungObject extends GameObject {
 		super(bitmap, x, y);
 	}
 	
-	@Override
-	public void update()
-	{
-		
-	}
+	
 }
