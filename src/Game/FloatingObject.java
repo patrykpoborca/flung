@@ -12,17 +12,17 @@ public class FloatingObject extends GameObject {
 	
 	//ACCESSORS
 	@Override
-	public float getX(){return position.initial.X;}
+	public float getX(){return position.initial().X;}
 	@Override
-	public float getY(){return position.initial.Y;}
+	public float getY(){return position.initial().Y;}
 	@Override
 	public void setX(float x){this.position.MOVE(new FloatPoint(x, 0f));}
 	@Override
 	public void sety(float y){this.position.MOVE(new FloatPoint(0f, y));}
 	@Override
-	public float getHeight(){return this.position.initial.getDifference(this.position.last).Y;}
+	public float getHeight(){return this.position.initial().getDifference(this.position.last()).Y;}
 	@Override
-	public float getWidth(){return this.position.initial.getDifference(this.position.last).X;}
+	public float getWidth(){return this.position.initial().getDifference(this.position.last()).X;}
 	//end of accessors
 	
 	public FloatingObject(FloatPoint start, FloatPoint end, float width)
@@ -32,7 +32,7 @@ public class FloatingObject extends GameObject {
 	
 	public FloatingObject(FloatLine line)
 	{
-		this.position = line;
+		this.position = line.copy();
 	}
 
 	public FloatingObject() {
@@ -64,19 +64,10 @@ public class FloatingObject extends GameObject {
 		this.velocityX += this.constantForceX;
 		this.velocityY += this.constantForceY;
 		
-		this.position.MOVE(new FloatPoint(this.velocityX*MetaGameData.gameClock, this.velocityY * MetaGameData.gameClock));
+		this.position.MOVE(new FloatPoint(this.velocityX*GameManager.gameClock, this.velocityY * GameManager.gameClock));
 	}
 	
-	@Override
-	public int hashCode()
-	{
-		final int hashInt = 3;
-		int result = hashInt * (int)this.position.initial.X;
-		result =result * hashInt * (int)this.position.initial.Y;
-		result =result * hashInt * (int)this.position.last.X;
-		result =result * hashInt * (int)this.position.last.Y;
-		return result;
-	}
+
 	
 	
 	public boolean equals(FloatingObject temp)

@@ -2,6 +2,9 @@ package utility;
 
 import java.util.ArrayList;
 
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
 
 public class FloatRect {
@@ -16,8 +19,8 @@ public class FloatRect {
 	 */
 	public FloatRect(FloatPoint XY, FloatPoint WidthHeight)
 	{
-		this.XY = XY;
-		this.WidthHeight = WidthHeight;
+		this.XY = XY.copy();
+		this.WidthHeight = WidthHeight.copy();
 	}
 	
 	public FloatPoint getCenter()
@@ -57,6 +60,25 @@ public class FloatRect {
 		return false;
 	}
 	
+	public void render(Canvas canvas, Paint paint)
+	{
+		paint.setColor(Color.RED);
+		paint.setStrokeWidth(10);
+		//top
+		canvas.drawLine(this.XY.X, this.XY.Y,
+				this.XY.X + this.WidthHeight.X, this.XY.Y, paint);
+		//left
+		canvas.drawLine(this.XY.X, this.XY.Y,
+				this.XY.X, this.WidthHeight.Y+ this.XY.Y, paint);
+		//right
+		canvas.drawLine(this.XY.X + this.WidthHeight.X, this.XY.Y,
+				this.XY.X + this.WidthHeight.X, this.XY.Y  +this.WidthHeight.Y, paint);
+		//bottom
+		canvas.drawLine(this.XY.X, this.XY.Y + this.WidthHeight.Y,
+				this.XY.X + this.WidthHeight.X, this.XY.Y + this.WidthHeight.Y, paint);
+		
+	}
+	
 	/**
 	 * Gets a list of all FloatLines that a Rect is made up of.
 	 * @return
@@ -82,5 +104,9 @@ public class FloatRect {
 			    RectA.top() < PointB.Y && RectA.bottom() > PointB.Y) 
 			return true;
 		return false;
+	}
+
+	public FloatRect copy() {
+		return new FloatRect(this.XY.copy(), this.WidthHeight.copy());
 	}
 }

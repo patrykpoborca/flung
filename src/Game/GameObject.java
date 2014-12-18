@@ -9,7 +9,6 @@ import android.view.View;
 import utility.FloatPoint;
 import utility.FloatRect;
 import utility.GameConstants;
-import utility.MetaGameData;
 import meta.states.*;
 
 public class GameObject {
@@ -104,8 +103,8 @@ public class GameObject {
 		this.velocityX += this.constantForceX;
 		this.velocityY += this.constantForceY;
 		
-		this.x += this.velocityX * MetaGameData.gameClock;
-		this.y += this.velocityY * MetaGameData.gameClock;
+		this.x += this.velocityX * GameManager.gameClock;
+		this.y += this.velocityY * GameManager.gameClock;
 	}
 	
 	/**

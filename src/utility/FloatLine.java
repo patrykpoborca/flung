@@ -10,23 +10,17 @@ import android.util.Log;
 
 public class FloatLine {
 
-	public FloatPoint initial;
-	public FloatPoint last;
+	private FloatPoint initial;
+	private FloatPoint last;
 	public FloatRect softBox;
 	public float Width;
 	public FloatLine(FloatPoint initial, FloatPoint last, float Width)
 	{
 		this.Width = Width;
+		this.initial = initial.copy();
+		this.last = last.copy();
 		//INITIAL SHOULD ALWAYS START ABOVE
-		if(initial.Y > last.Y)
-		{
-			this.initial = last;
-			this.last = initial;
-		}else
-		{
-			this.initial = initial;
-			this.last = last;
-		}
+
 		
 		
 		
@@ -35,14 +29,25 @@ public class FloatLine {
 		dimensions.Y = (dimensions.Y == 0) ? 1f : dimensions.Y;
 		FloatPoint leftCorner = (this.initial.Y < this.last.Y) ? this.initial : this.last;
 		this.softBox = new FloatRect(leftCorner, dimensions);
+
 	}
 	
-	
+	public FloatPoint initial()
+	{
+		return this.initial;
+	}
+	public FloatPoint last()
+	{
+		return this.last;
+	}
 	public void render(Canvas canvas, Paint paint)
 	{
 		paint.setStrokeWidth(this.Width);
 		canvas.drawLine(this.initial.X, this.initial.Y,
 				this.last.X, this.last.Y, paint);
+		
+		//this.softBox.render(canvas, paint);
+		
 	}
 	
 	public boolean Intersects(FloatRect rect)
@@ -57,20 +62,21 @@ public class FloatLine {
 		}
 		return false;
 	}
+	public float holderValue = -12345;
 	
 	public void MOVE(FloatPoint movement)
 	{
-		//Log.d("MOVE: ", "iX: "+ this.initial.X + " iY: " + this.initial.Y);
-		//Log.d("MOVE: ", "fX: "+ this.last.X + " fY: " + this.last.Y);
-		float tempDistance = this.initial.distance(this.last);
 		this.softBox.XY.X += movement.X;
 		this.softBox.XY.Y += movement.Y;
+
 		this.initial.X += movement.X;
+
 		this.initial.Y += movement.Y;
+
 		this.last.X += movement.X;
+
 		this.last.Y += movement.Y;
-		if(tempDistance != this.initial.distance(this.last))
-			Log.d("ERROR", "Error in the move" + tempDistance + " != " + this.initial.distance(this.last) );
+
 	}
 	
 	
@@ -114,4 +120,13 @@ public class FloatLine {
 		return (this.initial.equals(temp.initial) && (this.last.equals(temp.last)));
 	}
 	
+	public FloatLine copy()
+	{
+		FloatPoint start = this.initial.copy();
+		FloatPoint last = this.last.copy();
+		FloatLine r_val = new FloatLine(start, last, this.Width);
+		r_val.softBox = this.softBox.copy();
+		return r_val;
+		
+	}
 }

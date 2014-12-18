@@ -1,7 +1,6 @@
 package com.flung.GameActivity;
 
 import utility.GameConstants;
-import utility.MetaGameData;
 
 import com.example.flung.R;
 import com.example.flung.util.SystemUiHider;
@@ -39,7 +38,7 @@ public class GameActivity extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         
-        MetaGameData.GameQuality = 0.2f; //temp							
+       				
         
         Display display = getWindowManager().getDefaultDisplay();
 		Point size = new Point();

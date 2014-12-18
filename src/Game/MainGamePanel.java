@@ -37,6 +37,8 @@ public class MainGamePanel extends SurfaceView implements
 	private float currentX;
 	private float currentY;
 	
+	private long previousNanoTime=0;
+	
 	
 	//end of movement related stuff
 	
@@ -58,7 +60,7 @@ public class MainGamePanel extends SurfaceView implements
 		
 		// make the GamePanel focusable so it can handle events
 		setFocusable(true);
-		GameManager.startTimer_Line();
+		GameManager.startTimer_Line(GameManager.getStandardTime());
 	}
 	
 	
@@ -147,6 +149,8 @@ public class MainGamePanel extends SurfaceView implements
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
 			// tries to find what we're touching...
 			this.PAUSED = 1;
+			this.previousNanoTime = System.currentTimeMillis();
+			GameManager.gameClock -= GameManager.GameDifficulty;
 			this.prevX = event.getX();
 			this.prevY = event.getY();
 			
@@ -159,6 +163,8 @@ public class MainGamePanel extends SurfaceView implements
 			this.PAUSED= 0;
 			if(this.MAGNITUDE >= 2f)
 			{
+				GameManager.CLOCK_CORRECTION += System.currentTimeMillis()- this.previousNanoTime;
+				GameManager.gameClock += GameManager.GameDifficulty;
 				FloatPoint tempPoint =
 				movementUtility.calculateSpeedVector(this.MAGNITUDE, this.currentX-this.prevX, this.currentY-this.prevY);
 				playerOne.setVelocityX(tempPoint.X);
@@ -186,6 +192,7 @@ public class MainGamePanel extends SurfaceView implements
 	{
 		thread.setRunning(false);
 		((Activity)getContext()).finish();
+		GameManager.ThreadRunning = false;
 	}
 	
 	/**
@@ -195,7 +202,7 @@ public class MainGamePanel extends SurfaceView implements
 	 */
 	public void update() {
 	
-		if(this.PAUSED==0)
+		
 			playerOne.update();
 		// Update 
 		for(int a=0; a < GameConstants.floatingStructures.size(); a++)
@@ -222,7 +229,7 @@ public class MainGamePanel extends SurfaceView implements
 			}
 			
 			
-			if(this.PAUSED==0)
+			
 				GameConstants.floatingStructures.get(a).update();//updates all objects
 			if(GameConstants.floatingStructures.get(a).collidedWith(this.playerOne))
 			{

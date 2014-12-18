@@ -54,6 +54,9 @@ public class FloatPoint {
 		float diffY = ratio*this.getDifference(position).Y;
 		return new FloatPoint(diffX, diffY);
 	}
+	public FloatPoint copy() {
+		return new FloatPoint(this.X, this.Y);
+	}
 	
 	
 	
