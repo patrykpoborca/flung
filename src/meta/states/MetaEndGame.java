@@ -14,6 +14,7 @@ public class MetaEndGame extends MetaState {
 	@Override
 	public void execute(GameObject playerOne, MainGamePanel panel)
 	{
+		
 		panel.finish();
 	}
 }

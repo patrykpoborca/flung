@@ -5,21 +5,42 @@
     android:id="@+id/superView"
     tools:context="${relativePackage}.${activityClass}" >
 
-    <TextView
-        android:id="@+id/helloText"
+    <Button
+        android:id="@+id/NewGame_Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="@string/hello_world" />
+        android:layout_marginTop="212dp"
+        android:text="Start New Game" />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/Settings_Button"
+        style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/helloText"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="55dp"
-        android:text="Press me" />
+        android:layout_marginBottom="60dp"
+        android:text="Settings" />
+
+    <Button
+        android:id="@+id/LeaderBoard_Button"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/NewGame_Button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="45dp"
+        android:text="Leader Boards" />
+
+    <TextView
+        android:id="@+id/DisplayText_Field"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/NewGame_Button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="61dp"
+        android:text="" />
 
 </RelativeLayout>

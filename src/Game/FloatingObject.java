@@ -1,5 +1,6 @@
 package Game;
 
+import meta.states.MetaLoseHealth;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -33,6 +34,7 @@ public class FloatingObject extends GameObject {
 	public FloatingObject(FloatLine line)
 	{
 		this.position = line.copy();
+		this.listOfCommands.add(new MetaLoseHealth());
 	}
 
 	public FloatingObject() {
@@ -70,6 +72,13 @@ public class FloatingObject extends GameObject {
 
 	
 	
+	@Override
+	public void executeFunctions(GameObject playerOne, MainGamePanel panel) {
+		for(int a=0; a < this.listOfCommands.size(); a++)
+		{
+			this.listOfCommands.get(a).execute(playerOne, panel);
+		}
+	}
 	public boolean equals(FloatingObject temp)
 	{
 		return this.position.equals(temp.position);

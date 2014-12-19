@@ -32,14 +32,11 @@ public class GameActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
         // making it full screen
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        
-       				
-        
         Display display = getWindowManager().getDefaultDisplay();
 		Point size = new Point();
 		display.getSize(size);
@@ -48,11 +45,27 @@ public class GameActivity extends Activity {
 		double tempx = Math.pow((double)size.x, 2);
 		double tempy = Math.pow((double)size.y, 2);
 		GameConstants.screenSizeDiagonal = (float)Math.sqrt(tempx+tempy);
-		
-        setContentView(new MainGamePanel(this));
-
 	    // Set window fullscreen and remove title bar, and force landscape orientation
 	   
 	}
+	
+	
+	@Override
+	protected void onRestart() {
+		// TODO Auto-generated method stub
+		Log.d("ONRESTART", "restarting.");
+		super.onRestart();
+	}
+
+
+	@Override
+	protected void onResume() {
+		 setContentView(new MainGamePanel(this));
+		 
+		 GameManager.resetGameManager();
+		 
+		super.onResume();
+	}
+
 
 }

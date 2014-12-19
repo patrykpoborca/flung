@@ -40,11 +40,12 @@ public class FloatLine {
 	{
 		return this.last;
 	}
+	public Paint overridePaint = null;
 	public void render(Canvas canvas, Paint paint)
 	{
 		paint.setStrokeWidth(this.Width);
 		canvas.drawLine(this.initial.X, this.initial.Y,
-				this.last.X, this.last.Y, paint);
+				this.last.X, this.last.Y, (this.overridePaint != null) ? this.overridePaint :paint);
 		
 		//this.softBox.render(canvas, paint);
 		

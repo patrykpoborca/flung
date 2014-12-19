@@ -1,15 +1,20 @@
 package Game;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import com.example.flung.*;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Paint.Style;
+import android.graphics.Rect;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -37,11 +42,10 @@ public class MainGamePanel extends SurfaceView implements
 	private float currentX;
 	private float currentY;
 	
-	private long previousNanoTime=0;
-	
+	private Bitmap lifePicture;
 	
 	//end of movement related stuff
-	
+	public int Blink_Timer = 0;
 	public FlungObject playerOne;
 	
 	private float MAGNITUDE;
@@ -60,7 +64,8 @@ public class MainGamePanel extends SurfaceView implements
 		
 		// make the GamePanel focusable so it can handle events
 		setFocusable(true);
-		GameManager.startTimer_Line(GameManager.getStandardTime());
+		GameManager.startTimer_Line();
+		GameManager.startPointTally();
 	}
 	
 	
@@ -85,6 +90,7 @@ public class MainGamePanel extends SurfaceView implements
 		GameConstants.borders.add(new ExitBorders(0, 0,
 				10f, (float) GameConstants.screenSizeY));
 
+		this.lifePicture = BitmapFactory.decodeResource(getResources(), R.drawable.heart);
 		
 	}
 
@@ -148,23 +154,43 @@ public class MainGamePanel extends SurfaceView implements
 			this.PAUSED++;
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
 			// tries to find what we're touching...
-			this.PAUSED = 1;
-			this.previousNanoTime = System.currentTimeMillis();
-			GameManager.gameClock -= GameManager.GameDifficulty;
-			this.prevX = event.getX();
-			this.prevY = event.getY();
+			
+			if(this.PAUSED != 0 || GameManager.gameClock != 1f)
+			{//something went horribly wrong, attempt to fix it
+				this.PAUSED = 0;
+				GameManager.gameClock = 1f;
+				return true;
+			}
+			else
+			{
+				this.PAUSED = 1;
+				GameManager.PAUSE_SPAWN_CLOCK = 1;
+				GameManager.gameClock -= GameManager.GameDifficulty;
+				this.prevX = event.getX();
+				this.prevY = event.getY();
+			}
+			
 			
 		} if (event.getAction() == MotionEvent.ACTION_MOVE) {
 			this.currentX = event.getX();
 			this.currentY = event.getY();
+			
 			//move gesture
 		} if (event.getAction() == MotionEvent.ACTION_UP) {
 			//release gesture
+			if(GameManager.PAUSE_SPAWN_CLOCK != 0)
+			{
+				GameManager.createLine(); //punishing line for taking a move
+				if(GameManager.PAUSE_SPAWN_CLOCK == 2)
+					{
+					GameManager.PAUSE_SPAWN_CLOCK =0;
+					}				
+
+			}
 			this.PAUSED= 0;
 			if(this.MAGNITUDE >= 2f)
 			{
-				GameManager.CLOCK_CORRECTION += System.currentTimeMillis()- this.previousNanoTime;
-				GameManager.gameClock += GameManager.GameDifficulty;
+				GameManager.gameClock =1f;
 				FloatPoint tempPoint =
 				movementUtility.calculateSpeedVector(this.MAGNITUDE, this.currentX-this.prevX, this.currentY-this.prevY);
 				playerOne.setVelocityX(tempPoint.X);
@@ -176,23 +202,78 @@ public class MainGamePanel extends SurfaceView implements
 		}
 		return true;
 	}
+	
+	private void decrementor()
+	{
+		if(this.Blink_Timer > 0)
+			this.Blink_Timer -=1;
+		else
+			this.Blink_Timer = 0;
+	}
 
 	public void render(Canvas canvas) {
+		if(GameManager.ThreadRunning== false)
+			return;
 		canvas.drawColor(Color.BLACK);
+
+		//draws the vector line!
 		if(this.PAUSED == 2)
 			this.drawLine(canvas);
-		playerOne.render(canvas);
+		
+		if(this.Blink_Timer % 10 == 0)
+			{playerOne.render(canvas);
+			
+			}
+
+		this.decrementor();
 		for(int a=0; a < GameConstants.floatingStructures.size(); a++)
 		{
 			GameConstants.floatingStructures.get(a).render(canvas);//renders each item to the canvas
+		}
+		
+		Paint textPaint =  new Paint();
+		textPaint.setColor(Color.RED);
+		textPaint.setTextSize(100);
+		textPaint.setStrokeWidth(30);
+		textPaint.setTextAlign(Paint.Align.CENTER);
+		textPaint.setStyle(Style.FILL);
+		canvas.drawText("" + GameManager.PLAYER_POINTS, GameConstants.screenSizeX-((GameManager.PLAYER_POINTS/9999 >= 1)? 
+				200 : 150), 100,textPaint);
+		
+		
+		/// LIVES
+		for(int a =0; a < GameManager.getPlayerLives(); a++)
+		{
+			Rect temp = new Rect(GameConstants.screenSizeX- ((a+1) *GameConstants.LifeSize),
+					GameConstants.screenSizeY- GameConstants.LifeSize,
+					GameConstants.screenSizeX- ((a) *GameConstants.LifeSize), GameConstants.screenSizeY);
+			
+			canvas.drawBitmap(this.lifePicture, null, temp, new Paint());
 		}
 	}
 
 	public void finish()
 	{
-		thread.setRunning(false);
-		((Activity)getContext()).finish();
-		GameManager.ThreadRunning = false;
+		
+		thread.setRunning(false); //ends game logic run
+		GameManager.ThreadRunning = false; //ends the spawning of lines
+		
+		//now that flags are set, we need to "clean" after a short delay
+		Timer timer = new Timer();
+		
+		timer.schedule(new TimerTask()
+		{
+			@Override
+			public void run()
+			{
+				GameConstants.floatingStructures.clear();
+				GameConstants.borders.clear();
+				((Activity)getContext()).finish();
+			}
+		}, 100);
+		
+		
+
 	}
 	
 	/**
@@ -205,6 +286,7 @@ public class MainGamePanel extends SurfaceView implements
 		
 			playerOne.update();
 		// Update 
+			//Log.d("COUNT:", ""+ GameConstants.floatingStructures.size());
 		for(int a=0; a < GameConstants.floatingStructures.size(); a++)
 		{
 			
@@ -222,21 +304,18 @@ public class MainGamePanel extends SurfaceView implements
 				}
 				if(exitVal != -1)
 				{
-				GameConstants.floatingStructures.remove(exitVal);
-				Log.d("REMOVING SELF", "IT WORKED? " + GameConstants.floatingStructures.size());
+				GameConstants.floatingStructures.remove(exitVal); //the current object is out of bounds... must be removed
 				continue;
 				}
-			}
-			
-			
+			}			
 			
 				GameConstants.floatingStructures.get(a).update();//updates all objects
 			if(GameConstants.floatingStructures.get(a).collidedWith(this.playerOne))
 			{
-				Log.d("COLLISION", "YELLOW COLLISION!");
+				GameConstants.floatingStructures.get(a).executeFunctions(playerOne, this);
 			}
 			
-		}
+		}//endof for loop
 		for(int a=0; a < GameConstants.borders.size(); a++)
 		{
 			if(playerOne.collidedWith(GameConstants.borders.get(a)))

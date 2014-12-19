@@ -1,6 +1,7 @@
 package utility;
 
 import java.util.ArrayList;
+
 import android.util.Log;
 import Game.*;
 
@@ -19,12 +20,15 @@ final public class GameConstants {
 	public static float maxForceY; //used for thresholds on flings
 	public static float maxSpeed = 20f;//used to indicate maximum amount of speed that may be applied
 	
+	public static String fileName = "/FLUNG_savedPreferences.txt";
+	
+	public static int LifeSize = 70;
 	
 	//private static ArrayList<FloatingObject> removeStructures = new ArrayList<FloatingObject>();
 	
 	public static float Percent_Max = 0.7f;
 	public static float Percent_Med = 0.4f;
-	
+		
 	//gets you the SAFE diagonal ratio
 	final public static float getDiagonalRatio(float magnitude){
 		
