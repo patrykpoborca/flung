@@ -7,7 +7,7 @@ import android.util.Log;
 
 public class GameManager {
 
-public static float GameDifficulty = 1f; //lower to 0 the harder game becomes harder
+public static float GameDifficulty = 0f; //lower to 0 the harder game becomes harder
 //THe speed of the objects in the game!
 public static float gameClock = 1f;
 public static float SpawnTimer = 2.7f;	
@@ -18,23 +18,30 @@ public static float MinLengthRatio = 0.1f; //min magnitude
 public static float obstacleLineWidth = 20f;
 public static float minGapSize = 70f;
 
+public static float usingGravity =0;
+
+public static int PID = 0;
+
 public static int SWIPE_COUNT = 0;
 public static int SWIPE_LIMIT = -1;
+public static int SWIPE_CONSTANT = 50;
 
 private static int BASE_PLAYER_LIVES = 10;
-private static int LIVES_LOST = 0;
+public static int LIVES_LOST = 0;
 
 
 public static MetaPlayerData SELF = new MetaPlayerData();
 
-public static void resetGameManager()
+
+public static void resetAll()
 {
 	SWIPE_COUNT = 0;
 	LIVES_LOST =0;
 	ThreadRunning = true;
 	PAUSE_SPAWN_CLOCK = 0;
-	PLAYER_POINTS = 0;
+	PLAYER_POINTS = 0;	
 }
+
 
 public static int RemainingSwipes()
 {
@@ -49,7 +56,7 @@ public static int adjustPlayerLives(int amount)
 }
 public static int getPlayerLives()
 {	
-	return ((GameDifficulty == 0) ? 1 : (int)(BASE_PLAYER_LIVES * GameDifficulty)) + LIVES_LOST;}
+	return ((GameDifficulty <= 0 ) ? 1 : (int) Math.round((BASE_PLAYER_LIVES * GameDifficulty))) + LIVES_LOST;}
 
 public static boolean ThreadRunning = true;
 
@@ -96,6 +103,7 @@ public static FloatLine generateNonCollisionLine()
 	y_Position = (float)Math.random() * y_range; //position of y
 	XY = new FloatPoint(GameConstants.screenSizeX +10f, y_Position);
 	XY_second = new FloatPoint(XY.X + width, XY.Y + height);
+	Log.d("StartLineTimer: ", "PID== "+ GameManager.PID +" == " + PID  + " SizeOfStructs: " + GameConstants.floatingStructures.size());
 	return new FloatLine(XY, XY_second, GameManager.obstacleLineWidth);
 	
 }
@@ -106,6 +114,8 @@ public static FloatLine generateNonCollisionLine()
 
 public static void createLine()
 {
+	if(GameConstants.floatingStructures.size() >= 20) return; // at most 20 lines at once. For the love of memory i say
+	
 	FloatingObject parameter = new FloatingObject(GameManager.generateNonCollisionLine());
 	float ratio = ((float)Math.random() * 0.3f) + 0.7f; //mostly a horizontal movement
 	parameter.setVelocityX(-1 * ratio * GameManager.maxFloatingSpeed);//has to be negative to go left
@@ -121,45 +131,52 @@ public static int getStandardTime()
 	return (int)(1000 * (SpawnTimer * ((GameDifficulty <= 0.5) ? 0.5 : GameDifficulty)));
 }
 
-//used to correct for time spent paused
+//used to correct for time spent paused, a PENALTY AMOUNT (Amount of lines added during a puse
 public static int PAUSE_SPAWN_CLOCK = 0;
 private static float TIMER_AMOUNT = 5;
 public static int PLAYER_POINTS =0;
 private static int POINT_INC = 2;
-public static void startPointTally()
+private static Timer Tally_timer = new Timer();
+
+public static void startPointTally(final int PID)
 {
-	if(!ThreadRunning) return;
-	Timer timer = new Timer();
-	timer.schedule(new TimerTask()
+	if(PID != GameManager.PID || !ThreadRunning) return;
+	
+	Tally_timer.schedule(new TimerTask()
 	{
 		@Override
 		public void run()
 		{
 			PLAYER_POINTS+= 1;
-			startPointTally();
+			startPointTally(PID);
 		}
 	}, ((int) (((GameDifficulty <= 0.1) ? 0.1 : GameDifficulty) * (float)TIMER_AMOUNT * 100f))/POINT_INC);// base: 0.5s, can be every 0.02 seconds
 
 }
 
-public static void startTimer_Line()
+private static Timer Line_timer = new Timer();
+public static void startTimer_Line(final int PID)
 {
-	if(!ThreadRunning) return;
-	Timer timer = new Timer();
-	timer.schedule(new TimerTask()
+	
+	if(PID != GameManager.PID  || !ThreadRunning) return;
+	
+	
+	
+	Line_timer.schedule(new TimerTask()
 	{
 		@Override
 		public void run()
-		{
-			if(GameManager.PAUSE_SPAWN_CLOCK != 0)
+		{ 
+			if(GameManager.PAUSE_SPAWN_CLOCK != 0 && GameManager.GameDifficulty != 0f) //don't both if on hardest setting...
 			{
-				if(PAUSE_SPAWN_CLOCK == 1) PAUSE_SPAWN_CLOCK++;
-				startTimer_Line();
+				
+				PAUSE_SPAWN_CLOCK++; //count penalty...
+				startTimer_Line(PID);
 				return;
 			}
 			//Log.d("TimerCall", " bleh");
 			createLine();
-			startTimer_Line();
+			startTimer_Line(PID);
 			
 		}
 	}, getStandardTime());

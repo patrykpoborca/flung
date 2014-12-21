@@ -2,11 +2,13 @@ package com.flung.GameActivity;
 
 import utility.GameConstants;
 
+import com.example.flung.GameOverActivity;
 import com.example.flung.R;
 import com.example.flung.util.SystemUiHider;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
@@ -60,12 +62,26 @@ public class GameActivity extends Activity {
 
 	@Override
 	protected void onResume() {
-		 setContentView(new MainGamePanel(this));
+		
+		Log.d("THIS SHOULD NOT", "BE CALLED");
+		
+		GameManager.PID++;
+		setContentView(new MainGamePanel(this, GameManager.PID));
 		 
-		 GameManager.resetGameManager();
+		 
 		 
 		super.onResume();
 	}
+	
 
+
+	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		
+		super.onStop();
+	}
+
+	
 
 }

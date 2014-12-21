@@ -5,35 +5,6 @@
     android:id="@+id/superView"
     tools:context="${relativePackage}.${activityClass}" >
 
-    <Button
-        android:id="@+id/NewGame_Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="212dp"
-        android:text="Start New Game" />
-
-    <Button
-        android:id="@+id/Settings_Button"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="60dp"
-        android:text="Settings" />
-
-    <Button
-        android:id="@+id/LeaderBoard_Button"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/NewGame_Button"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="45dp"
-        android:text="Leader Boards" />
-
     <TextView
         android:id="@+id/DisplayText_Field"
         android:layout_width="wrap_content"
@@ -42,5 +13,52 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="61dp"
         android:text="" />
+
+    <Button
+        android:id="@+id/Settings_Button"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/LeaderBoard_Button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="22dp"
+        android:text="Settings" />
+
+    <Button
+        android:id="@+id/LeaderBoard_Button"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/New_Game_Button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="21dp"
+        android:text="Leader Boards" />
+
+    <Button
+        android:id="@+id/New_Game_Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/DisplayText_Field"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="21dp"
+        android:text="Start New Game" />
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/sign_in_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Settings_Button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp" >
+    </com.google.android.gms.common.SignInButton>
+
+    <Button
+        android:id="@+id/sign_out_button"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/Settings_Button"
+        android:layout_below="@+id/sign_in_button"
+        android:text="Sign Out" />
 
 </RelativeLayout>

@@ -6,8 +6,9 @@ import java.util.TimerTask;
 
 import com.example.flung.*;
 
-import android.app.Activity;
+import android.app.*;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -42,6 +43,8 @@ public class MainGamePanel extends SurfaceView implements
 	private float currentX;
 	private float currentY;
 	
+	public Context thisContext;
+	
 	private Bitmap lifePicture;
 	
 	//end of movement related stuff
@@ -49,11 +52,15 @@ public class MainGamePanel extends SurfaceView implements
 	public FlungObject playerOne;
 	
 	private float MAGNITUDE;
+	
+	private int taskPID;
 
-	public MainGamePanel(Context context) {
+	public MainGamePanel(Context context, int taskPID) {
 		super(context);
-		
+		this.thisContext = context;
 		this.PAUSED = 0;
+		this.taskPID = taskPID;
+		GameManager.resetAll();
 		// adding the callback (this) to the surface holder to intercept events
 		getHolder().addCallback(this);
 
@@ -64,15 +71,19 @@ public class MainGamePanel extends SurfaceView implements
 		
 		// make the GamePanel focusable so it can handle events
 		setFocusable(true);
-		GameManager.startTimer_Line();
-		GameManager.startPointTally();
+		GameManager.startTimer_Line(this.taskPID);
+		GameManager.startPointTally(this.taskPID);
 	}
 	
 	
 	private void setupGame()
 	{
+		
+		
+		
+		
 		playerOne = new FlungObject(BitmapFactory.decodeResource(getResources(), R.drawable.droid_1), 50, 50);
-		//playerOne.setConstantForceY(GameConstants.gravity);
+		playerOne.setConstantForceY(GameManager.usingGravity);
 		//GameConstants.floatingStructures.add(new GameObject(BitmapFactory.decodeResource(getResources(), R.drawable.droid_1), 200, 200));
 		
 		
@@ -150,6 +161,12 @@ public class MainGamePanel extends SurfaceView implements
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
+		
+		if(GameManager.RemainingSwipes() == 0)
+		{
+			return true;
+		}
+		
 		if(this.PAUSED==1) //go to true pause
 			this.PAUSED++;
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -172,24 +189,32 @@ public class MainGamePanel extends SurfaceView implements
 			
 			
 		} if (event.getAction() == MotionEvent.ACTION_MOVE) {
+			// we are now moving, counts as a swipe.
+
+			
 			this.currentX = event.getX();
 			this.currentY = event.getY();
 			
 			//move gesture
 		} if (event.getAction() == MotionEvent.ACTION_UP) {
+			
 			//release gesture
 			if(GameManager.PAUSE_SPAWN_CLOCK != 0)
 			{
 				GameManager.createLine(); //punishing line for taking a move
-				if(GameManager.PAUSE_SPAWN_CLOCK == 2)
+				if(GameManager.GameDifficulty <= 0.7f)
 					{
+					for(int a=1; a < GameManager.PAUSE_SPAWN_CLOCK; a++)
+						GameManager.createLine(); //add penalty lines for each spawn during a "pause"
+					}
 					GameManager.PAUSE_SPAWN_CLOCK =0;
-					}				
+								
 
 			}
 			this.PAUSED= 0;
 			if(this.MAGNITUDE >= 2f)
 			{
+				GameManager.SWIPE_COUNT++; //count the swipe!
 				GameManager.gameClock =1f;
 				FloatPoint tempPoint =
 				movementUtility.calculateSpeedVector(this.MAGNITUDE, this.currentX-this.prevX, this.currentY-this.prevY);
@@ -240,6 +265,13 @@ public class MainGamePanel extends SurfaceView implements
 		canvas.drawText("" + GameManager.PLAYER_POINTS, GameConstants.screenSizeX-((GameManager.PLAYER_POINTS/9999 >= 1)? 
 				200 : 150), 100,textPaint);
 		
+		textPaint.setTextSize(60);
+		textPaint.setStrokeWidth(20);
+		if(GameManager.SWIPE_LIMIT == -1)
+		canvas.drawText( ""+ GameManager.SWIPE_COUNT, 40, 100,textPaint);
+		else
+		canvas.drawText( GameManager.RemainingSwipes()  + " / " +  GameManager.SWIPE_LIMIT, 100, 70,textPaint);
+		
 		
 		/// LIVES
 		for(int a =0; a < GameManager.getPlayerLives(); a++)
@@ -254,7 +286,7 @@ public class MainGamePanel extends SurfaceView implements
 
 	public void finish()
 	{
-		
+		Log.d("FINISH CALLED", "Proper?");
 		thread.setRunning(false); //ends game logic run
 		GameManager.ThreadRunning = false; //ends the spawning of lines
 		
@@ -268,6 +300,7 @@ public class MainGamePanel extends SurfaceView implements
 			{
 				GameConstants.floatingStructures.clear();
 				GameConstants.borders.clear();
+
 				((Activity)getContext()).finish();
 			}
 		}, 100);

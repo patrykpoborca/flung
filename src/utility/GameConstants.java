@@ -11,7 +11,7 @@ final public class GameConstants {
 	//This is for all objects being managed at any point of the game
 	final public static ArrayList<FloatingObject> floatingStructures = new ArrayList<FloatingObject>();
 	final public static ArrayList<TriggerGameObject> borders = new ArrayList<TriggerGameObject>();
-	final public static float gravity = 0.981f/2f;
+	final public static float gravity = 0.981f/4f;
 	public static float ScrollSpeed = 10f;
 	public static int screenSizeX;
 	public static int screenSizeY;

@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.lang.reflect.Field;
 
+import com.flung.*;
+import com.flung.MainActivity.MainActivity;
 import com.example.flung.*;
 
 import Game.GameManager;
@@ -21,21 +23,26 @@ import android.util.Log;
  */
 final public class MetaPlayerData {
 
-	public  String UserName;
-	public  int highScore;
-	public  float DifficultyPreference;
+	public  String UserName= "NOT IMPLEMENTED";
+	public  int highScore=0;
+	public  float DifficultyPreference = 1;
+	public boolean UseGravity =false ;
+	public boolean ClickChallenge = false;
 	
 	public MetaPlayerData(){}
 	
 	
-	
+	/**
+	 * Used to load player data into GameManager.SELF
+	 * @param context
+	 */
 	public static void LoadPlayerData(Context context)
 	{
 		String path = context.getFilesDir().getAbsolutePath();
 		File file = new File(path + GameConstants.fileName);
 		
-		if(file.exists())
-		{
+		if(!file.exists()) return;
+		
 			int length = (int) file.length();
 
 			byte[] bytes = new byte[length];
@@ -46,11 +53,11 @@ final public class MetaPlayerData {
 			    in.read(bytes);
 			    in.close();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			} 
 			String contents = new String(bytes);   
-			//Log.d("DISPLAY PRE-eRROR", contents);
+
 			int index = 0;
 			
 			Field field;
@@ -71,12 +78,19 @@ final public class MetaPlayerData {
 				if(contents.length() <=3)
 				{
 					break;
+					
 				}
 			}
-//			Log.d("Printing!", contents);
-		}
+			MainActivity temp = (MainActivity)context;
+			temp.playerToSettings();
 	}
+
+			
 	
+	/**
+	 * Method is used to parse the GameManager.SELF and save it into GameConstants.fileName directory
+	 * @param context
+	 */
 	public static void SavePlayerData(Context context)
 	{
 		String path = context.getFilesDir().getAbsolutePath();
@@ -85,19 +99,17 @@ final public class MetaPlayerData {
 		
 		try {
 			FileOutputStream stream = new FileOutputStream(file);
-//		    stream.write(GameManager.SELF.UserName.getBytes());
-//		    stream.write(("!=!"+ GameManager.SELF.highScore).getBytes());
-//		    stream.write(("!=!"+ GameManager.SELF.DifficultyPreference + "!=!").getBytes());
 			byte bytearray[]= ReflectionHelper.createParsedString_as_bytes(GameManager.SELF);
-			//Log.d("PreWRITE", new String(bytearray));
+			Log.d("PreWRITE", new String(bytearray));
 			stream.write(bytearray);
 		    stream.close();
+		    
 		} 
 		catch(Exception e)
 		{
 			e.printStackTrace();
 		}
-		
+	
 	}
 	
 	
