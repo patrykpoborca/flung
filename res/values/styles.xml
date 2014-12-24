@@ -24,6 +24,11 @@
         <item name="metaButtonBarStyle">@style/ButtonBar</item>
         <item name="metaButtonBarButtonStyle">@style/ButtonBarButton</item>
     </style>
+    
+    <style name="generalnotitle">
+    <item name="android:windowNoTitle">true</item>
+	</style>
+    
 
     <style name="ButtonBar">
         <item name="android:paddingLeft">2dp</item>

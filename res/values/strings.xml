@@ -8,5 +8,24 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="title_activity_game_over">GameOverActivity</string>
     <string name="action_settings">Settings</string>
+    <string name="sign_out">Sign out</string>
+    <string name="sign_in">Sign in</string>
+    <string name="status_signing_in">Signing in</string>
+    <string name="status_signed_out">Signed out</string>
+    <string name="status_revoke_access">Revoked access</string>
+    <string name="status_revoke_access_error">Error revoking access: %s</string>
+    <string name="signed_in_as">Signed in as %s</string>
+    <string name="play_services_error">Google Play services is not available.  This application will close.</string>
+    <string name="close">Close</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="app_misconfigured">app_misconfigured</string>
+    <string name="sign_in_failed">sign_in_failed</string>
+    <string name="license_failed">license_failed</string>
+    <string name="gamehelper_unknown_error">gamehelper_unknown_error</string>
+    <string name="gamehelper_sign_in_failed">gamehelper_sign_in_failed</string>
+    <string name="gamehelper_app_misconfigured">gamehelper_app_misconfigured</string>
+    <string name="gamehelper_license_failed">gamehelper_license_failed</string>
+    <string name="signin_other_error">signin_other_error</string>
+    
 
 </resources>

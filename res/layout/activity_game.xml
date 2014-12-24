@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="#0099cc"
     android:id="@+id/fullScreenId"
-    tools:context="com.example.flung.GameActivity" >
+    tools:context="com.flung.patryk.GameOver_Activity.GameActivity" >
 
     <!--
          The primary full-screen view. This can be replaced with whatever view

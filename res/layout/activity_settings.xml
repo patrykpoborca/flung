@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="52dp"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Game Difficulty (10 [Hardest] to 0 [Easiest])" />
+
+        <LinearLayout
+            android:layout_width="325dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="65dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/Decrement_Button"
+				android:layout_marginLeft="100dp"
+                  android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:text="-" />
+
+            <TextView
+                android:id="@+id/Difficulty_Text"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="-5dp"
+                 android:background="@android:color/white"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:text="TextView" />
+
+            <Button
+                android:id="@+id/Increment_Button"
+                android:layout_marginLeft="10dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:text="+" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/linearLayout1"
+        android:layout_marginLeft="33dp"
+        android:layout_marginTop="22dp" >
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Gravity:" />
+
+        <ImageButton
+            android:id="@+id/Gravity_Button"
+            android:layout_width="110dp"
+            android:layout_height="54dp"
+            android:layout_marginLeft="33dp"
+            android:adjustViewBounds="true"
+            android:background="@android:color/black"
+            android:scaleType="fitCenter"
+            android:src="@drawable/gravity" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/linearLayout2"
+        android:layout_marginTop="48dp" >
+
+        <TextView
+            android:id="@+id/TextView01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Click Challenge:" />
+
+        <ImageButton
+            android:id="@+id/Clicks_Button"
+            android:layout_width="110dp"
+            android:layout_height="54dp"
+            android:layout_marginLeft="33dp"
+            android:adjustViewBounds="true"
+            android:background="@android:color/black"
+            android:scaleType="fitCenter"
+            android:src="@drawable/clicks" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/Save_settings_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/linearLayout2"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="30dp"
+        android:text="Save" />
+
+    <Button
+        android:id="@+id/Exit_settings_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/Save_settings_button"
+        android:layout_alignBottom="@+id/Save_settings_button"
+        android:layout_marginLeft="39dp"
+        android:layout_toRightOf="@+id/Save_settings_button"
+        android:text="Exit" />
+
+</RelativeLayout>

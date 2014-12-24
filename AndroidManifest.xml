@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.flung"
+    package="com.flung.patryk"
     android:installLocation="auto"
+    android:noHistory="true"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -9,6 +10,9 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
 
     <uses-sdk
         android:minSdkVersion="13"
@@ -18,10 +22,10 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        
-        android:theme="@style/AppTheme" >
+        android:theme="@android:style/Theme.NoTitleBar"
+         >
         <activity
-            android:name="com.flung.MainActivity.MainActivity"
+            android:name=".MainActivity.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -31,20 +35,38 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.flung.GameActivity.GameActivity"
+            android:name=".GameActivity.GameActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_game"
             android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme" >
         </activity>
         <activity
+            android:name=".GameOver_Activity.GameOverActivity"
+            android:label="@string/title_activity_game_over"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".SettingsActivity.SettingsActivity"
+            android:label="@string/title_activity_game_over" 
+            android:screenOrientation="portrait">
+        </activity>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.gms.games.APP_ID"
+            android:value="@string/app_id" />
+
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings" >
+        </activity>
+        <activity
             android:name=".GameOverActivity"
             android:label="@string/title_activity_game_over" >
         </activity>
-        <meta-data
-    android:name="com.google.android.gms.version"
-    android:value="@integer/google_play_services_version" />
-        
     </application>
 
 </manifest>
