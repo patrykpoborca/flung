@@ -5,14 +5,7 @@
     android:layout_height="match_parent"
     tools:context="${relativePackage}.${activityClass}" >
 
-    <TextView
-        android:id="@+id/DisplayText_Field"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/NewGame_Button"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="61dp"
-        android:text="" />
+   
 
     <Button
         android:id="@+id/Settings_Button"
@@ -63,15 +56,6 @@
         android:text="@string/sign_out" 
         android:visibility="gone"/>
 
-    <ListView
-        android:id="@+id/circles_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/DisplayText_Field"
-        android:layout_marginRight="20dp"
-        android:layout_toLeftOf="@+id/New_Game_Button" >
-    </ListView>
-
     <TextView
         android:id="@+id/sign_in_status"
         android:layout_width="wrap_content"
@@ -79,5 +63,22 @@
         android:layout_above="@+id/New_Game_Button"
         android:layout_centerHorizontal="true"
         android:text="TextView" />
+
+    <com.facebook.widget.LoginButton
+        android:id="@+id/authButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="52dp" />
+
+    <Button
+        android:id="@+id/TEST"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/authButton"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="22dp"
+        android:text="Button" />
 
 </RelativeLayout>

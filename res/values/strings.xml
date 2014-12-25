@@ -26,6 +26,7 @@
     <string name="gamehelper_app_misconfigured">gamehelper_app_misconfigured</string>
     <string name="gamehelper_license_failed">gamehelper_license_failed</string>
     <string name="signin_other_error">signin_other_error</string>
-    
-
+    <string name="facebook_app_id">354169751420962</string>
+	<string name="title_facebook_login">Facebook Login</string>
+	<string name="High_Score">High Score:</string>
 </resources>

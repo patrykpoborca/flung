@@ -18,6 +18,7 @@ public static float LengthRatio = 0.7f; //max magnitude of a line in regards to 
 public static float MinLengthRatio = 0.1f; //min magnitude
 public static float obstacleLineWidth = 20f;
 public static float minGapSize = 70f;
+public static int newHighScore =0;
 
 public static float usingGravity =0;
 

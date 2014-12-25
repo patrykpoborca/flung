@@ -34,6 +34,8 @@ import com.google.android.gms.plus.People.LoadPeopleResult;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
 import com.google.android.gms.plus.model.people.PersonBuffer;
+import com.facebook.UiLifecycleHelper;
+import com.facebook.widget.FacebookDialog;
 import com.flung.patryk.R;
 import com.flung.patryk.Game.GameManager;
 import com.flung.patryk.GameActivity.GameActivity;
@@ -56,8 +58,13 @@ import android.content.BroadcastReceiver.PendingResult;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.Signature;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -67,6 +74,8 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 /**
@@ -87,9 +96,11 @@ public class MainActivity extends BaseGameActivity implements
   
   private boolean DESTROYED = false;
   
+  private MainFragment mainFragment; //facebook's fragment
+  private Button TEST;
   
-  private int newHighScore =0;
   
+  private  UiLifecycleHelper uiHelper;
   
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -114,13 +125,36 @@ public class MainActivity extends BaseGameActivity implements
     mSignOutButton = (Button) findViewById(R.id.sign_out_button);
    // mRevokeButton = (Button) findViewById(R.id.revoke_access_button);
     mStatus = (TextView) findViewById(R.id.sign_in_status);
-
+    this.TEST = (Button)findViewById(R.id.TEST);
+    this.TEST.setOnClickListener(this);
     mSignInButton.setOnClickListener(this);
     mSignOutButton.setOnClickListener(this);
   
     MetaPlayerData.LoadPlayerData(this);
     
+    
+    //facebook loading
+    
+    if (savedInstanceState == null) {
+        // Add the fragment on initial activity setup
+        mainFragment = new MainFragment();
+        getSupportFragmentManager()
+        .beginTransaction()
+        .add(android.R.id.content, mainFragment)
+        .commit();
+    } else { 
+        // Or set the fragment from restored state info
+        mainFragment = (MainFragment) getSupportFragmentManager()
+        .findFragmentById(android.R.id.content);
+    }
+     
+    
+		this.uiHelper = new UiLifecycleHelper(this, null);
+		this.uiHelper.onCreate(savedInstanceState);
+    
   }
+  
+  
 
 
   @Override
@@ -137,13 +171,6 @@ public class MainActivity extends BaseGameActivity implements
     super.onStop();
   } 
   
-  
-
-  @Override
-protected void onDestroy() {
-
-	super.onDestroy();
-}
 
 
 @Override
@@ -163,9 +190,14 @@ protected void onResumeFragments() {
 @Override
   public void onResume() {
       super.onResume();  
-
+      uiHelper.onResume();
   }
   
+@Override
+protected void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    uiHelper.onSaveInstanceState(outState);
+}
   
 
   @Override
@@ -174,6 +206,17 @@ protected void onRestart() {
 	super.onRestart();
 }
 
+  @Override
+  public void onPause() {
+      super.onPause();
+      uiHelper.onPause();
+  }
+  
+  @Override
+  public void onDestroy() {
+      super.onDestroy();
+      uiHelper.onDestroy();
+  }
 
 @Override
   public void onClick(View v) {
@@ -207,6 +250,13 @@ protected void onRestart() {
 				i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 				startActivityForResult(i, FlungValues.CALL_GAME.ordinal()); // 9000 is game signiture (OVER 9000!!!!)
 				break;
+          case R.id.TEST:
+        	  Log.d("TOUCH", "MABODY");
+        	  FacebookDialog shareDialog = new FacebookDialog.ShareDialogBuilder(this)
+              .setLink("https://developers.facebook.com/android")
+              .build();
+        	  uiHelper.trackPendingDialogCall(shareDialog.present());
+        	  break;
       }
     }
   }
@@ -286,11 +336,11 @@ protected void onRestart() {
 					});
 		  
 			
-		if(this.newHighScore !=0) //then we update highscore.
+		if(GameManager.newHighScore !=0) //then we update highscore.
 		{
-			Games.Leaderboards.submitScore(this.mHelper.getApiClient(), this.getString(R.string.leaderboard_flung_top_scores), this.newHighScore);
+			Games.Leaderboards.submitScore(this.mHelper.getApiClient(), this.getString(R.string.leaderboard_flung_top_scores), GameManager.newHighScore);
 			Log.d("UPdatingScore", "TO THE WEB");
-			this.newHighScore = 0;
+			GameManager.newHighScore = 0;
 		}
 		
 	}
@@ -300,7 +350,7 @@ protected void onRestart() {
 		//if player beat old score?!
 		if(GameManager.PLAYER_POINTS > GameManager.SELF.highScore)
 		{
-			this.newHighScore = GameManager.PLAYER_POINTS;
+			GameManager.newHighScore = GameManager.PLAYER_POINTS;
 		}
 		Intent i = new Intent(getApplicationContext(), GameOverActivity.class);
 		i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -319,6 +369,19 @@ protected void onRestart() {
 			showScore();
 			
 		}
+		
+		uiHelper.onActivityResult(requestCode, resultCode, data, new FacebookDialog.Callback() {
+	        @Override
+	        public void onError(FacebookDialog.PendingCall pendingCall, Exception error, Bundle data) {
+	            Log.e("Activity", String.format("Error: %s", error.toString()));
+	        }
+
+	        @Override
+	        public void onComplete(FacebookDialog.PendingCall pendingCall, Bundle data) {
+	            Log.i("Activity", "Success!");
+	        }
+	    });
+		
 	 super.onActivityResult(requestCode, resultCode, data);
 	}
 	

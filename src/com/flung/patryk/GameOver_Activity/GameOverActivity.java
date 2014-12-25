@@ -25,9 +25,14 @@ public class GameOverActivity extends Activity {
 		
 	    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 	    getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-	    setContentView(R.layout.activity_game_over);
-	    Log.d("here", "dfd");
-		this.printResults();
+	    if(GameManager.newHighScore != 0)
+	    	setContentView(R.layout.activity_game_over_high_score);
+	    else
+	    	setContentView(R.layout.activity_game_over);
+
+	    this.printStats();
+		this.setUpLayout();
+		
 		
 		Intent sender = new Intent(this, GameOverActivity.class);
 		sender.putExtra("GameOver", true);
@@ -57,17 +62,8 @@ public class GameOverActivity extends Activity {
 	}
 	
 	
-	
-	
-	private void printResults()
+	private void setUpLayout()
 	{
-		TextView summary = (TextView)findViewById( R.id.PostGame_Text);
-		Log.d("BUTNOT", "dfd");
-		String text = "Lives remaining= " + GameManager.getPlayerLives();
-		text += "\nSwipes Used = " + GameManager.SWIPE_COUNT + " / " +((GameManager.SWIPE_LIMIT == -1) ? "unlimited" : GameManager.SWIPE_LIMIT); 
-		text+= "\n Points = " + GameManager.PLAYER_POINTS;
-		summary.setText(text);
-		
 		final GameOverActivity this_Activity = this;
 		ImageButton OK = (ImageButton)this.findViewById(R.id.OK_Button);
 		OK.setOnClickListener(new View.OnClickListener()
@@ -80,6 +76,20 @@ public class GameOverActivity extends Activity {
 				this_Activity.finish();				
 			}
 		});
+	}
+	
+	private void printStats()
+	{
+		TextView hsBox = (TextView)this.findViewById(R.id.High_Score_text);
+		hsBox.setText(""+ GameManager.PLAYER_POINTS);
+		
+		TextView summary = (TextView)findViewById( R.id.PostGame_Text);
+		Log.d("BUTNOT", "dfd");
+		String text = "Lives remaining= " + GameManager.getPlayerLives();
+		text += "\nSwipes Used = " + GameManager.SWIPE_COUNT + " / " +((GameManager.SWIPE_LIMIT == -1) ? "unlimited" : GameManager.SWIPE_LIMIT); 
+		summary.setText(text);
+		
+		
 	}
 
 }
