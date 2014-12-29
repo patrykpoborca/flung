@@ -48,6 +48,7 @@ public class MainGamePanel extends SurfaceView implements
 	public Context thisContext;
 	
 	private Bitmap lifePicture;
+	private Bitmap armorPicture;
 	
 	//end of movement related stuff
 	public int Blink_Timer = 0;
@@ -113,6 +114,7 @@ public class MainGamePanel extends SurfaceView implements
 				10f, (float) GameConstants.screenSizeY));
 
 		this.lifePicture = BitmapFactory.decodeResource(getResources(), R.drawable.heart);
+		this.armorPicture = BitmapFactory.decodeResource(getResources(), R.drawable.metalheart);
 		
 	}
 
@@ -285,13 +287,16 @@ public class MainGamePanel extends SurfaceView implements
 		
 		
 		/// LIVES
-		for(int a =0; a < GameManager.getPlayerLives(); a++)
+		for(int a =0; a < GameManager.getPlayerLives() + GameManager.getPlayerArmor(); a++)
 		{
 			Rect temp = new Rect(GameConstants.screenSizeX- ((a+1) *GameConstants.LifeSize),
 					GameConstants.screenSizeY- GameConstants.LifeSize,
 					GameConstants.screenSizeX- ((a) *GameConstants.LifeSize), GameConstants.screenSizeY);
 			
-			canvas.drawBitmap(this.lifePicture, null, temp, new Paint());
+			if(a == GameManager.getPlayerLives())
+				canvas.drawBitmap(this.armorPicture, null,  temp, new Paint());
+			else
+				canvas.drawBitmap(this.lifePicture, null, temp, new Paint());
 		}
 	}
 

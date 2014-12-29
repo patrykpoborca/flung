@@ -14,8 +14,8 @@ public static float gameClock = 1f;
 public static float SpawnTimer = 2.7f;	
 public static float maxFloatingSpeed = 10f;
 public static float outOfBoundsRatio = 0.9f;//how much of object can go out of bounds
-public static float LengthRatio = 0.7f; //max magnitude of a line in regards to screen Height
-public static float MinLengthRatio = 0.1f; //min magnitude
+public static float LengthRatio = 0.55f; //max magnitude of a line in regards to screen Height
+public static float MinLengthRatio = 0.25f; //min magnitude
 public static float obstacleLineWidth = 20f;
 public static float minGapSize = 70f;
 public static int newHighScore =0;
@@ -24,11 +24,15 @@ public static float usingGravity =0;
 
 public static int PID = 0;
 
+public static float Power_Up_Timer = 15f;
+
 public static int SWIPE_COUNT = 0;
 public static int SWIPE_LIMIT = -1;
 public static int SWIPE_CONSTANT = 50;
 
 private static int BASE_PLAYER_LIVES = 10;
+private static int BASE_PLAYER_ARMOR = 0;
+
 public static int LIVES_LOST = 0;
 
 
@@ -71,9 +75,36 @@ public static int adjustPlayerLives(int amount)
 	
 	return getPlayerLives() - LIVES_LOST;
 }
+
+/**
+ * used to subtract armor-> health
+ * @param x
+ * @return player health
+ */
+public static int adjustPlayerHealth(int x)
+{
+	if(GameManager.getPlayerArmor() >0)
+		GameManager.subtractPlayerArmor(x);
+	else
+		GameManager.adjustPlayerHealth(x);
+	return GameManager.BASE_PLAYER_LIVES;
+}
+
 public static int getPlayerLives()
 {	
 	return ((GameDifficulty <= 0 ) ? 1 : (int) Math.round((BASE_PLAYER_LIVES * GameDifficulty))) + LIVES_LOST;}
+
+public static int getPlayerArmor()
+{
+	return GameManager.BASE_PLAYER_ARMOR;
+}
+
+public static int subtractPlayerArmor(int x)
+{
+	GameManager.BASE_PLAYER_ARMOR -= x;
+	return GameManager.BASE_PLAYER_ARMOR;
+}
+
 
 public static boolean ThreadRunning = true;
 
@@ -142,6 +173,48 @@ public static void createLine()
 	GameConstants.floatingStructures.add(parameter);
 
 }
+
+/**
+ * used to randomly set a position to the right of the screen for an object
+ * @param obj
+ */
+public static void setObjectPositionRandomly(GameObject obj)
+{
+	float posX =(float)( GameConstants.screenSizeX + GameConstants.screenSizeX * Math.random());
+	float posY = (float) ((GameConstants.screenSizeY + obj.getHeight()) * Math.random());
+	
+	obj.setX(posX);
+	obj.sety(posY);
+}
+
+private static Timer powerUpTimer;
+public static void powerUpTimer(final int PID)
+{
+	
+	if(PID != GameManager.PID  || !ThreadRunning) return;
+		
+		
+		
+		powerUpTimer.schedule(new TimerTask()
+		{
+			@Override
+			public void run()
+			{ 
+								
+			}
+		}, (int)GameManager.Power_Up_Timer);
+	
+}
+
+public static GameObject randomPowerUp()
+{
+	double rand = Math.random();
+	
+	return 
+}
+
+
+
 
 public static int getStandardTime()
 {

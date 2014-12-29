@@ -22,7 +22,7 @@ public class MetaLoseHealth extends MetaState {
 		if(this.hasExecuted) return;
 		this.hasExecuted = true;
 		panel.Blink_Timer += 51;
-		GameManager.adjustPlayerLives(1);
+		GameManager.adjustPlayerHealth(1);
 		if( GameManager.getPlayerLives() <= 0)
 			panel.finish();
 	}
