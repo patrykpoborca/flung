@@ -71,7 +71,7 @@ public class SettingsActivity extends Activity {
 			}
 		});
 		final Button decrementButton = (Button)findViewById(R.id.Decrement_Button);
-		decrementButton.setOnClickListener(new View.OnClickListener() {
+		decrementButton.setOnClickListener(new View.OnClickListener() { 
 			
 			@Override
 			public void onClick(View v) {
@@ -83,16 +83,16 @@ public class SettingsActivity extends Activity {
 		});
 		
 		//GRAVITY USE
-		final ImageButton gravityButton = (ImageButton)findViewById(R.id.Gravity_Button);
+		final ImageButton gravityButton = (ImageButton)findViewById(R.id.onoffgravity);
 		GameManager.SELF.UseGravity = 0 != GameManager.usingGravity;
 		Log.d("GRAVITY: ", "GameMan: " + GameManager.SELF.UseGravity + "  GameValue: " + GameManager.usingGravity);
 		if(!GameManager.SELF.UseGravity)
 		{
-		gravityButton.setImageDrawable(context.getResources().getDrawable(drawable.gravity)); 
+		gravityButton.setImageDrawable(context.getResources().getDrawable(drawable.buttonoff)); 
 		}
 	else
 		{
-		gravityButton.setImageDrawable(context.getResources().getDrawable(drawable.selected_gravity)); 
+		gravityButton.setImageDrawable(context.getResources().getDrawable(drawable.buttonon)); 
 		}
 		
 		gravityButton.setOnClickListener(new View.OnClickListener() {
@@ -101,11 +101,11 @@ public class SettingsActivity extends Activity {
 				GameManager.SELF.UseGravity = !GameManager.SELF.UseGravity;
 				if(!GameManager.SELF.UseGravity)
 					{
-					gravityButton.setImageDrawable(context.getResources().getDrawable(drawable.gravity)); 
+					gravityButton.setImageDrawable(context.getResources().getDrawable(drawable.buttonoff)); 
 					}
 				else
 					{
-					gravityButton.setImageDrawable(context.getResources().getDrawable(drawable.selected_gravity)); 
+					gravityButton.setImageDrawable(context.getResources().getDrawable(drawable.buttonon)); 
 
 					}
 			}
@@ -113,16 +113,16 @@ public class SettingsActivity extends Activity {
 		//CLICK CHALLENGE
 		
 		GameManager.SELF.ClickChallenge = -1 != GameManager.SWIPE_LIMIT;
-		final ImageButton clickButton = (ImageButton)findViewById(R.id.Clicks_Button);
+		final ImageButton clickButton = (ImageButton)findViewById(R.id.onoffclick);
 		if(!GameManager.SELF.ClickChallenge)
 		{
 			
-			clickButton.setImageDrawable(context.getResources().getDrawable(drawable.clicks)); 
+			clickButton.setImageDrawable(context.getResources().getDrawable(drawable.buttonoff)); 
 		}
 	else
 		{
 
-		clickButton.setImageDrawable(context.getResources().getDrawable(drawable.selected_clicks)); 
+		clickButton.setImageDrawable(context.getResources().getDrawable(drawable.buttonon)); 
 		}
 		
 		clickButton.setOnClickListener(new View.OnClickListener() {
@@ -131,12 +131,12 @@ public class SettingsActivity extends Activity {
 				GameManager.SELF.ClickChallenge = !GameManager.SELF.ClickChallenge;
 				if(!GameManager.SELF.ClickChallenge)
 				{
-					clickButton.setImageDrawable(context.getResources().getDrawable(drawable.clicks)); 
+					clickButton.setImageDrawable(context.getResources().getDrawable(drawable.buttonoff)); 
 					
 				}
 			else
 				{
-				clickButton.setImageDrawable(context.getResources().getDrawable(drawable.selected_clicks)); 
+				clickButton.setImageDrawable(context.getResources().getDrawable(drawable.buttonon)); 
 				
 				}
 			}
@@ -145,7 +145,7 @@ public class SettingsActivity extends Activity {
 		
 		
 		//save settings
-		final Button saveButton = (Button)findViewById(R.id.Save_settings_button);
+		final ImageButton saveButton = (ImageButton)findViewById(R.id.Save_settings_button);
 		final Intent i = new Intent(getApplicationContext(), SettingsActivity.class);
 			
 		saveButton.setOnClickListener(new View.OnClickListener() {
@@ -161,15 +161,26 @@ public class SettingsActivity extends Activity {
 		});
 		
 		//exit back to main
-		final Button exitButton = (Button)findViewById(R.id.Exit_settings_button);
-		exitButton.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				i.putExtra("Saved", false);
-				context.finish();
-			}
-		});
+//		final Button exitButton = (Button)findViewById(R.id.Exit_settings_button);
+//		exitButton.setOnClickListener(new View.OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				i.putExtra("Saved", false);
+//				context.finish();
+//			}
+//		});
+	}
+
+	@Override
+	public void onBackPressed() {
+		final Intent i = new Intent(getApplicationContext(), SettingsActivity.class);
+		MetaPlayerData.SavePlayerData(this);	
+		MetaPlayerData.playerToSettings();
+		i.putExtra("Saved", true);
+		this.setResult(Activity.RESULT_OK, i);
+		this.finish();
+		super.onBackPressed();
 	}
 	
 	

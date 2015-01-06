@@ -90,14 +90,14 @@ public class MainActivity extends BaseGameActivity implements
 
 
   private SignInButton mSignInButton;
-  private Button mSignOutButton;
+  private ImageButton mSignOutButton;
 
   private TextView mStatus;
   
   private boolean DESTROYED = false;
   
   private MainFragment mainFragment; //facebook's fragment
-  private Button TEST;
+  private ImageButton TEST;
   
   
   private  UiLifecycleHelper uiHelper;
@@ -122,18 +122,18 @@ public class MainActivity extends BaseGameActivity implements
     	//Google API STUFF
     	//Google API STUFF
     mSignInButton = (SignInButton) findViewById(R.id.sign_in_button);
-    mSignOutButton = (Button) findViewById(R.id.sign_out_button);
+    mSignOutButton = (ImageButton) findViewById(R.id.android_sign_out_button);
    // mRevokeButton = (Button) findViewById(R.id.revoke_access_button);
-    mStatus = (TextView) findViewById(R.id.sign_in_status);
-    this.TEST = (Button)findViewById(R.id.TEST);
+    
+    this.TEST = (ImageButton)findViewById(R.id.sharebutton);
     this.TEST.setOnClickListener(this);
-    mSignInButton.setOnClickListener(this);
+    mSignInButton.setOnClickListener(this); 
     mSignOutButton.setOnClickListener(this);
   
     MetaPlayerData.LoadPlayerData(this);
     
     
-    //facebook loading
+    //facebook loading 
     
     if (savedInstanceState == null) {
         // Add the fragment on initial activity setup
@@ -168,6 +168,7 @@ public class MainActivity extends BaseGameActivity implements
 
   @Override
   protected void onStop() {
+	  this.mHelper.onStop();
     super.onStop();
   } 
   
@@ -191,6 +192,7 @@ protected void onResumeFragments() {
   public void onResume() {
       super.onResume();  
       uiHelper.onResume();
+   
   }
   
 @Override
@@ -227,14 +229,19 @@ protected void onRestart() {
       // between connected and not connected.
       switch (v.getId()) {
           case R.id.sign_in_button:
-        	  if(mHelper == null)
-        		  
-            mHelper.beginUserInitiatedSignIn();
+        	  if(mHelper != null)
+        		  mHelper.beginUserInitiatedSignIn();
             break;
-
+          case R.id.android_sign_out_button:
+        	  mHelper.signOut();
+        	  break;
           case R.id.LeaderBoard_Button:
-
-				startActivityForResult(Games.Leaderboards.getLeaderboardIntent(this.mHelper.getApiClient(),
+        	  if(mHelper != null && !mHelper.isSignedIn())
+        		  {
+        		  mHelper.beginUserInitiatedSignIn();
+        		  return;
+        		  }
+        		  startActivityForResult(Games.Leaderboards.getLeaderboardIntent(this.mHelper.getApiClient(),
 						this.getResources().getString(R.string.leaderboard_flung_top_scores)), 10);        	  
         	  break;
         	  
@@ -250,7 +257,7 @@ protected void onRestart() {
 				i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 				startActivityForResult(i, FlungValues.CALL_GAME.ordinal()); // 9000 is game signiture (OVER 9000!!!!)
 				break;
-          case R.id.TEST:
+          case R.id.sharebutton:
         	  Log.d("TOUCH", "MABODY");
         	  FacebookDialog shareDialog = new FacebookDialog.ShareDialogBuilder(this)
               .setLink("https://developers.facebook.com/android")
@@ -281,7 +288,7 @@ protected void onRestart() {
 	  	this.findViewById(R.id.New_Game_Button).setOnClickListener(this);
 	  	this.findViewById(R.id.Settings_Button).setOnClickListener(this);
 	  	this.findViewById(R.id.LeaderBoard_Button).setOnClickListener(this);
-		
+
 	}
 
   
@@ -291,33 +298,36 @@ protected void onRestart() {
 	public void onSignInFailed() {
 		// TODO Auto-generated method stub
 		this.mStatus.setText("Failed Login");
-		CleanUp_LoggedOut();
-	}
-	
-	private void CleanUp_LoggedOut()
-	{
 		
-		mSignInButton.setVisibility(View.VISIBLE);
-	    mSignInButton.setEnabled(true);
-	    mSignOutButton.setVisibility(View.GONE);
-	    mSignOutButton.setEnabled(false);
+	}
+	/**
+	 * used when you're logged out
+	 */
+	public void CleanUp_LoggedOut()
+	{
+			//mSignInButton.setEnabled(true);
+			mSignInButton.setVisibility(View.VISIBLE);
+			//mSignOutButton.setEnabled(false);
+			mSignOutButton.setVisibility(View.GONE);
+	    
 	}
 
-	
-	private void CleanUp_LoggedIn(){
-		
+	/** 
+	 * used when logged in
+	 */
+	public void CleanUp_LoggedIn(){
+		   //mSignInButton.setEnabled(false);
 		   mSignInButton.setVisibility(View.GONE);
-		    mSignInButton.setEnabled(false);
-		    mSignOutButton.setVisibility(View.VISIBLE);
-		    mSignOutButton.setEnabled(true);
+		   //mSignOutButton.setEnabled(true);
+		   mSignOutButton.setVisibility(View.VISIBLE);
+		   
 	}
 
 	@Override
 	public void onSignInSucceeded() {
 
-		this.mStatus.setText("SIGNED IN");
-		  CleanUp_LoggedIn();
-		  
+
+		  this.CleanUp_LoggedIn();
 		  com.google.android.gms.common.api.PendingResult<LoadPlayerScoreResult> holdIt = 
 				  Games.Leaderboards.loadCurrentPlayerLeaderboardScore(this.mHelper.getApiClient(), this.getString(
 					R.string.leaderboard_flung_top_scores), LeaderboardVariant.TIME_SPAN_ALL_TIME, LeaderboardVariant.COLLECTION_PUBLIC);
@@ -328,7 +338,7 @@ protected void onRestart() {
 						{
 							if(returned != null && returned.getStatus().isSuccess())
 							{
-								Log.d("WOrking?!@", "meh " + returned.getScore());
+								
 								int temporaryValue = (returned.getScore() != null) ? (int)returned.getScore().getRawScore() : 0;
 								if(temporaryValue > GameManager.SELF.highScore) GameManager.SELF.highScore = temporaryValue;
 							} 
@@ -366,6 +376,7 @@ protected void onRestart() {
 			//clearing!
 			GameConstants.floatingStructures.clear();
 			GameConstants.borders.clear();
+			GameConstants.PowerUps.clear();
 			showScore();
 			
 		}

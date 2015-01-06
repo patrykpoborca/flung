@@ -24,6 +24,8 @@ public class GameObject {
 	protected float constantForceY;
 	public FloatRect collisionBox; 
 	public ArrayList<MetaState> listOfCommands = new ArrayList<MetaState>();
+	public boolean flagForDeletion = false;
+	
 	
 	//accessors
 	public float getX(){return this.x;}

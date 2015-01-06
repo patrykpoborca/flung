@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" 
-    android:background="@drawable/highscore"
-    >
-    
-    
+    android:layout_height="match_parent"
+    android:background="@drawable/highscore" >
 
     <RelativeLayout
         android:id="@+id/relativeLayout1"
@@ -14,48 +11,38 @@
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="110dp"
         android:layout_marginTop="126dp" >
-
-        <ImageButton
-            android:id="@+id/OK_Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="26dp"
-            android:adjustViewBounds="true"
-            android:scaleType="fitCenter"
-            android:src="@drawable/okbutton" />
-
     </RelativeLayout>
-
-    <TextView
-        android:id="@+id/PostGame_Text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="92dp"
-        android:textColor="#000"
-        android:text="Error" />
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="54dp"
-        android:text="@string/High_Score"
-        android:textColor="#000"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
         android:id="@+id/High_Score_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_below="@+id/textView1"
-        android:layout_marginTop="20dp"
-        android:text="Error"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="136dp"
+        android:textSize="40.0sp"
+        android:text="@string/generic_error"
         android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#FFFFF9" />
+
+    <ImageButton
+        android:id="@+id/OK_Button"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:adjustViewBounds="true"
+        android:background="@android:color/transparent"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ok" />
+
+    <TextView
+        android:id="@+id/PostGame_Text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/OK_Button"
+        android:layout_centerHorizontal="true"
+        android:text="@string/generic_error"
         android:textColor="#000" />
 
 </RelativeLayout>

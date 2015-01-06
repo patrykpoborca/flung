@@ -29,6 +29,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
+import com.flung.patryk.MainActivity.MainActivity;
 import com.google.android.gms.appstate.AppStateManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -537,7 +538,7 @@ public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
             debugLog("signOut: was already disconnected, ignoring.");
             return;
         }
-
+        ((MainActivity)this.mActivity).CleanUp_LoggedOut();
         // for Plus, "signing out" means clearing the default account and
         // then disconnecting
         if (0 != (mRequestedClients & CLIENT_PLUS)) {
@@ -715,7 +716,7 @@ public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
     @Override
     public void onConnected(Bundle connectionHint) {
         debugLog("onConnected: connected!");
-
+        
         if (connectionHint != null) {
             debugLog("onConnected: connection hint provided. Checking for invite.");
             Invitation inv = connectionHint
@@ -752,6 +753,7 @@ public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
         mUserInitiatedSignIn = false;
         mConnecting = false;
         notifyListener(true);
+        
     }
 
     private final String GAMEHELPER_SHARED_PREFS = "GAMEHELPER_SHARED_PREFS";

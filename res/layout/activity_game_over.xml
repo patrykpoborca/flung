@@ -2,12 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" 
-    android:background="@drawable/regularscore"
+    android:background="@drawable/yourscore"
     >
     
     
-
-    <RelativeLayout
+ <RelativeLayout
         android:id="@+id/relativeLayout1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,47 +14,39 @@
         android:layout_marginLeft="110dp"
         android:layout_marginTop="126dp" >
 
-        <ImageButton
-            android:id="@+id/OK_Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="26dp"
-            android:adjustViewBounds="true"
-            android:scaleType="fitCenter"
-            android:src="@drawable/okbutton" />
-
     </RelativeLayout>
+
+    <ImageButton
+        android:id="@+id/OK_Button"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="41dp"
+        android:adjustViewBounds="true"
+        android:background="@android:color/transparent"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ok" />
 
     <TextView
         android:id="@+id/PostGame_Text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="92dp"
-        android:textColor="#000"
-        android:text="Error" />
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="29dp"
-        android:text="@string/High_Score"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_centerVertical="true"
+        android:text="Error"
         android:textColor="#000" />
 
     <TextView
         android:id="@+id/High_Score_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_below="@+id/textView1"
-        android:layout_marginTop="20dp"
+        android:layout_above="@+id/PostGame_Text"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="29dp"
         android:text="Error"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="#000" />
+        android:textColor="#FFFFF9"
+        android:textSize="40.0sp" />
 
 </RelativeLayout>

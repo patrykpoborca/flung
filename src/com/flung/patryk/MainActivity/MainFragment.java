@@ -55,7 +55,9 @@ public class MainFragment extends Fragment {
 	private void onSessionStateChange(Session session, SessionState state, Exception exception) {
 	    if (state.isOpened()) {  
 	        Log.i(TAG, "Logged in...");
+	        this.getActivity().findViewById(R.id.sharebutton).setVisibility(View.VISIBLE);
 	    } else if (state.isClosed()) {
+	    	this.getActivity().findViewById(R.id.sharebutton).setVisibility(View.GONE);
 	        Log.i(TAG, "Logged out...");
 	    }
 	}

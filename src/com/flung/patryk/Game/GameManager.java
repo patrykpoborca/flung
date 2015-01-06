@@ -1,20 +1,24 @@
 package com.flung.patryk.Game;
 import java.util.*;
 
+import com.flung.patryk.R;
 import com.flung.patryk.Game_Utility.*;
 import com.flung.patryk.MetaStates.FlungValues;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 public class GameManager {
 
-public static float GameDifficulty = 0f; //lower to 0 the harder game becomes harder
+public static float GameDifficulty = 0.5f; //lower to 0 the harder game becomes harder
 //THe speed of the objects in the game!
 public static float gameClock = 1f;
-public static float SpawnTimer = 2.7f;	
+public static float SpawnTimer = 3.2f;	
 public static float maxFloatingSpeed = 10f;
 public static float outOfBoundsRatio = 0.9f;//how much of object can go out of bounds
-public static float LengthRatio = 0.55f; //max magnitude of a line in regards to screen Height
+public static float LengthRatio = 0.45f; //max magnitude of a line in regards to screen Height
 public static float MinLengthRatio = 0.25f; //min magnitude
 public static float obstacleLineWidth = 20f;
 public static float minGapSize = 70f;
@@ -24,7 +28,7 @@ public static float usingGravity =0;
 
 public static int PID = 0;
 
-public static float Power_Up_Timer = 15f;
+public static float Power_Up_Timer = 3f;
 
 public static int SWIPE_COUNT = 0;
 public static int SWIPE_LIMIT = -1;
@@ -42,13 +46,27 @@ public static MetaPlayerData SELF = new MetaPlayerData();
 
 public static FlungValues CurrentView;
 
-public static void resetAll()
+//armor image....
+
+public static Bitmap armorPicture= null;
+public static Bitmap bonusPicture=null;
+public static Bitmap lifePicture = null;
+
+public static void resetAll(Context c)
 {
+	Power_Up_Timer= 4f + (GameManager.GameDifficulty * 2f);
+	 if(bonusPicture == null)
+		 bonusPicture =BitmapFactory.decodeResource(c.getResources(), R.drawable.points);
+	 if(armorPicture == null)
+		 armorPicture = BitmapFactory.decodeResource(c.getResources(), R.drawable.metalheart);
+	 if(lifePicture == null)
+		 lifePicture = BitmapFactory.decodeResource(c.getResources(), R.drawable.heart);
 	SWIPE_COUNT = 0;
 	LIVES_LOST =0;
 	ThreadRunning = true;
 	PAUSE_SPAWN_CLOCK = 0;
 	PLAYER_POINTS = 0;	
+	GameManager.BASE_PLAYER_ARMOR = (GameDifficulty <0.1f) ?  1 : 0;
 }
 
 public static float getAccurateGameClock()
@@ -86,7 +104,7 @@ public static int adjustPlayerHealth(int x)
 	if(GameManager.getPlayerArmor() >0)
 		GameManager.subtractPlayerArmor(x);
 	else
-		GameManager.adjustPlayerHealth(x);
+		GameManager.adjustPlayerLives(x);
 	return GameManager.BASE_PLAYER_LIVES;
 }
 
@@ -175,42 +193,50 @@ public static void createLine()
 }
 
 /**
- * used to randomly set a position to the right of the screen for an object
+ * used to randomly set a position to the right of the screen for an object+velocity
  * @param obj
  */
-public static void setObjectPositionRandomly(GameObject obj)
+public static GameObject setObjectPositionRandomly(GameObject obj)
 {
 	float posX =(float)( GameConstants.screenSizeX + GameConstants.screenSizeX * Math.random());
 	float posY = (float) ((GameConstants.screenSizeY + obj.getHeight()) * Math.random());
 	
+	float velocityX = GameManager.maxFloatingSpeed	* (((float)(Math.random()) * 0.2f)+ 0.8f);
+	float velocityY = ((Math.random() <= 0.5) ? -1 : 1) * (GameManager.maxFloatingSpeed - velocityX);
+	obj.setVelocityX(-1 * velocityX);
+	obj.setVelocityY(velocityY);
 	obj.setX(posX);
 	obj.sety(posY);
+	return obj;
 }
 
-private static Timer powerUpTimer;
-public static void powerUpTimer(final int PID)
+private static Timer powerUpTimer = new Timer();
+public static void startPowerUpTimer(final int PID)
 {
-	
 	if(PID != GameManager.PID  || !ThreadRunning) return;
-		
-		
 		
 		powerUpTimer.schedule(new TimerTask()
 		{
 			@Override
 			public void run()
 			{ 
-								
+				if(PID != GameManager.PID  || !ThreadRunning) return;
+				GameObject temporary = GameManager.setObjectPositionRandomly(GameManager.randomPowerUp());	
+				GameConstants.PowerUps.add(temporary);
+				GameManager.startPowerUpTimer(PID);
 			}
-		}, (int)GameManager.Power_Up_Timer);
+		}, (int)GameManager.Power_Up_Timer * 1000);
 	
 }
 
 public static GameObject randomPowerUp()
 {
 	double rand = Math.random();
+	if(rand <=0.4f)
+		return new ShieldPowerUp(0, 0);
+	else
+		return new PlusPoints(0,0);
 	
-	return 
 }
 
 
@@ -258,6 +284,7 @@ public static void startPointTally(final int PID)
 		@Override
 		public void run()
 		{
+			if(PID != GameManager.PID || !ThreadRunning) return;
 			int temporary_value = grab_and_reset_OverFlow_time();
 			if(GameManager.gameClock == 1f)
 				{
@@ -286,7 +313,7 @@ public static void startTimer_Line(final int PID)
 	{
 		@Override
 		public void run()
-		{ 
+		{ if(PID != GameManager.PID  || !ThreadRunning) return;
 			if(GameManager.PAUSE_SPAWN_CLOCK != 0 && GameManager.GameDifficulty != 0f) //don't both if on hardest setting...
 			{
 				

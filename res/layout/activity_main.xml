@@ -3,82 +3,95 @@
     android:id="@+id/superView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#b0e0e6"
+    
     tools:context="${relativePackage}.${activityClass}" >
 
-   
+    
 
-    <Button
+    <ImageButton
         android:id="@+id/Settings_Button"
         style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_below="@+id/LeaderBoard_Button"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="22dp"
-        android:text="Settings" />
-
-    <Button
+		android:layout_width="200dp"
+        android:layout_height="70dp"
+          android:scaleType="fitCenter"
+        android:background="@android:color/transparent"        
+		android:src="@drawable/buttonsettings"   />
+ 
+    <ImageButton
         android:id="@+id/LeaderBoard_Button"
         style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_below="@+id/New_Game_Button"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="21dp"
-        android:text="Leader Boards" />
+        android:layout_width="200dp"
+        android:layout_height="70dp"
+          android:scaleType="fitCenter"
+        android:background="@android:color/transparent"        
+		android:src="@drawable/buttonleaderboard"     />
 
-    <Button
+    <ImageButton
         android:id="@+id/New_Game_Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_height="70dp"
         android:layout_below="@+id/DisplayText_Field"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="21dp"
-        android:text="Start New Game" />
+        android:scaleType="fitCenter"
+        android:background="@android:color/transparent"        
+		android:src="@drawable/buttonnewgame"        
+ />
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/sign_in_button"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/Settings_Button"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:visibility="gone" >
+        android:layout_marginTop="21dp"
+         >
+
     </com.google.android.gms.common.SignInButton>
 
-    <Button
-        android:id="@+id/sign_out_button"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/Settings_Button"
-        android:layout_below="@+id/sign_in_button"
-        android:text="@string/sign_out" 
-        android:visibility="gone"/>
 
-    <TextView
-        android:id="@+id/sign_in_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/New_Game_Button"
-        android:layout_centerHorizontal="true"
-        android:text="TextView" />
+
+
 
     <com.facebook.widget.LoginButton
         android:id="@+id/authButton"
+        
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="52dp" />
 
-    <Button
-        android:id="@+id/TEST"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ImageButton
+        android:id="@+id/sharebutton"
+		android:layout_width="200dp"
+        android:layout_height="70dp"
+          android:scaleType="fitCenter"
+        android:background="@android:color/transparent"        
+		android:src="@drawable/facebooksharebutton"  
         android:layout_above="@+id/authButton"
-        android:layout_alignParentLeft="true"
-        android:layout_marginBottom="22dp"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
         android:text="Button" />
+
+    <ImageButton
+        android:id="@+id/android_sign_out_button"
+        android:layout_width="200dp"
+        android:layout_height="70dp"
+        android:visibility="gone"
+        android:layout_marginTop="21dp"
+        android:layout_alignLeft="@+id/Settings_Button"
+        android:layout_below="@+id/Settings_Button"
+        android:background="@android:color/transparent"
+        android:scaleType="fitCenter"
+        android:src="@drawable/buttonsignout" />
 
 </RelativeLayout>

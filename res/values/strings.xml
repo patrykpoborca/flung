@@ -29,4 +29,5 @@
     <string name="facebook_app_id">354169751420962</string>
 	<string name="title_facebook_login">Facebook Login</string>
 	<string name="High_Score">High Score:</string>
+	<string name="generic_error">Error</string>
 </resources>

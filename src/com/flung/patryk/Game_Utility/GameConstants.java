@@ -11,15 +11,21 @@ final public class GameConstants {
 	
 	//This is for all objects being managed at any point of the game
 	final public static ArrayList<FloatingObject> floatingStructures = new ArrayList<FloatingObject>();
+	final public static ArrayList<GameObject> PowerUps= new ArrayList<GameObject>();
 	final public static ArrayList<TriggerGameObject> borders = new ArrayList<TriggerGameObject>();
 	final public static float gravity = 0.981f/4f;
 	public static float ScrollSpeed = 10f;
+	
+	
+	
 	public static int screenSizeX;
 	public static int screenSizeY;
 	public static float screenSizeDiagonal;
 	public static float maxForceX; //used for thresholds on flings
 	public static float maxForceY; //used for thresholds on flings
 	public static float maxSpeed = 20f;//used to indicate maximum amount of speed that may be applied
+	
+	
 	
 	public static String fileName = "/FLUNG_savedPreferences.txt";
 	

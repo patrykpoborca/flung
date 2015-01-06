@@ -47,8 +47,7 @@ public class MainGamePanel extends SurfaceView implements
 	
 	public Context thisContext;
 	
-	private Bitmap lifePicture;
-	private Bitmap armorPicture;
+	
 	
 	//end of movement related stuff
 	public int Blink_Timer = 0;
@@ -63,7 +62,7 @@ public class MainGamePanel extends SurfaceView implements
 		this.thisContext = context;
 		this.PAUSED = 0;
 		this.taskPID = taskPID;
-		GameManager.resetAll();
+		GameManager.resetAll(this.thisContext);
 		// adding the callback (this) to the surface holder to intercept events
 		getHolder().addCallback(this);
 
@@ -76,12 +75,18 @@ public class MainGamePanel extends SurfaceView implements
 		setFocusable(true);
 		GameManager.startTimer_Line(this.taskPID);
 		GameManager.startPointTally(this.taskPID);
+		GameManager.startPowerUpTimer(this.taskPID);
 	}
 	
 	
 	public void resetPosition()
 	{
-		playerOne = new FlungObject(BitmapFactory.decodeResource(getResources(), R.drawable.droid_1), (int)((double)GameConstants.screenSizeX*0.1),
+		ArrayList<Bitmap> list = new ArrayList<Bitmap>();
+		list.add(BitmapFactory.decodeResource(getResources(), R.drawable.bird1));
+		list.add(BitmapFactory.decodeResource(getResources(), R.drawable.bird2));
+		list.add(BitmapFactory.decodeResource(getResources(), R.drawable.bird3));
+		list.add(BitmapFactory.decodeResource(getResources(), R.drawable.bird4));
+		playerOne = new FlungObject(list, (int)((double)GameConstants.screenSizeX*0.1),
 							GameConstants.screenSizeY /2 - 50);
 		
 		playerOne.setConstantForceY(GameManager.usingGravity);
@@ -113,8 +118,8 @@ public class MainGamePanel extends SurfaceView implements
 		GameConstants.borders.add(new ExitBorders(0, 0,
 				10f, (float) GameConstants.screenSizeY));
 
-		this.lifePicture = BitmapFactory.decodeResource(getResources(), R.drawable.heart);
-		this.armorPicture = BitmapFactory.decodeResource(getResources(), R.drawable.metalheart);
+		
+		
 		
 	}
 
@@ -160,7 +165,7 @@ public class MainGamePanel extends SurfaceView implements
 	void drawLine(Canvas canvas) {
 		float totalY = (float)Math.pow((double)this.currentY - (double)this.prevY, 2);
 		float totalX = (float)Math.pow((double)this.currentX - (double)this.prevX, 2);
-		this.MAGNITUDE =(float) Math.sqrt((double)totalX + (double)totalY);
+		this.MAGNITUDE =(float) Math.sqrt((double)totalX + (double)totalY); 
 		
 		
 		Paint paint = new Paint();
@@ -176,9 +181,9 @@ public class MainGamePanel extends SurfaceView implements
 	public boolean onTouchEvent(MotionEvent event) {
 		
 		if(GameManager.RemainingSwipes() == 0)
-		{
+		{  
 			return true;
-		}
+		} 
 		
 		if(this.PAUSED==1) //go to true pause
 			this.PAUSED++;
@@ -250,9 +255,9 @@ public class MainGamePanel extends SurfaceView implements
 	}
 
 	public void render(Canvas canvas) {
-		if(GameManager.ThreadRunning== false)
+		if(GameManager.ThreadRunning== false || GameManager.PID != this.taskPID)
 			return;
-		canvas.drawColor(Color.BLACK);
+		canvas.drawColor(Color.CYAN);
 
 		//draws the vector line!
 		if(this.PAUSED == 2)
@@ -287,17 +292,22 @@ public class MainGamePanel extends SurfaceView implements
 		
 		
 		/// LIVES
-		for(int a =0; a < GameManager.getPlayerLives() + GameManager.getPlayerArmor(); a++)
+		int iterationVal = GameManager.getPlayerLives() + GameManager.getPlayerArmor() ;
+		for(int a =0; a < iterationVal; a++)
 		{
 			Rect temp = new Rect(GameConstants.screenSizeX- ((a+1) *GameConstants.LifeSize),
 					GameConstants.screenSizeY- GameConstants.LifeSize,
 					GameConstants.screenSizeX- ((a) *GameConstants.LifeSize), GameConstants.screenSizeY);
 			
-			if(a == GameManager.getPlayerLives())
-				canvas.drawBitmap(this.armorPicture, null,  temp, new Paint());
+			if(a >= GameManager.getPlayerLives())
+				canvas.drawBitmap(GameManager.armorPicture, null,  temp, new Paint());
 			else
-				canvas.drawBitmap(this.lifePicture, null, temp, new Paint());
+				canvas.drawBitmap(GameManager.lifePicture, null, temp, new Paint());
 		}
+		
+		//drawing projectiles...
+		for(int a=0; a < GameConstants.PowerUps.size(); a++)
+			GameConstants.PowerUps.get(a).render(canvas);
 	}
 
 	public void stopThreads()
@@ -339,6 +349,7 @@ public class MainGamePanel extends SurfaceView implements
 			//Log.d("COUNT:", ""+ GameConstants.floatingStructures.size());
 		for(int a=0; a < GameConstants.floatingStructures.size(); a++)
 		{
+			if(GameConstants.floatingStructures.size() == a)break;
 			
 			if(GameConstants.floatingStructures.get(a).outOfBounds())
 			{
@@ -372,6 +383,22 @@ public class MainGamePanel extends SurfaceView implements
 				GameConstants.borders.get(a).executeFunctions(playerOne, this);
 		}
 		
+		int exitVal = -1;
+		int removeVal = -1;
+		for(int a=0; a < GameConstants.PowerUps.size(); a++)
+		{
+			if(playerOne.collidedWith(GameConstants.PowerUps.get(a)))
+				{GameConstants.PowerUps.get(a).executeFunctions(playerOne, this);
+				exitVal = a;
+				}
+			else
+				GameConstants.PowerUps.get(a).update();
+		
+			if(GameConstants.PowerUps.get(a).outOfBounds())
+				removeVal = a;
+		}
+		if(exitVal != -1) GameConstants.PowerUps.remove(exitVal);
+		if(removeVal != -1 && exitVal == -1) GameConstants.PowerUps.remove(removeVal);
 	}
 
 }
