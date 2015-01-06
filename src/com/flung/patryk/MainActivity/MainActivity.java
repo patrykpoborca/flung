@@ -92,7 +92,7 @@ public class MainActivity extends BaseGameActivity implements
   private SignInButton mSignInButton;
   private ImageButton mSignOutButton;
 
-  private TextView mStatus;
+
   
   private boolean DESTROYED = false;
   
@@ -255,10 +255,10 @@ protected void onRestart() {
           case R.id.New_Game_Button:
 				i = new Intent(getApplicationContext(), GameActivity.class);
 				i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-				startActivityForResult(i, FlungValues.CALL_GAME.ordinal()); // 9000 is game signiture (OVER 9000!!!!)
+				startActivityForResult(i, FlungValues.CALL_GAME.ordinal());
 				break;
           case R.id.sharebutton:
-        	  Log.d("TOUCH", "MABODY");
+        	  
         	  FacebookDialog shareDialog = new FacebookDialog.ShareDialogBuilder(this)
               .setLink("https://developers.facebook.com/android")
               .build();
@@ -297,7 +297,7 @@ protected void onRestart() {
 	@Override
 	public void onSignInFailed() {
 		// TODO Auto-generated method stub
-		this.mStatus.setText("Failed Login");
+		this.CleanUp_LoggedOut();
 		
 	}
 	/**
@@ -349,7 +349,7 @@ protected void onRestart() {
 		if(GameManager.newHighScore !=0) //then we update highscore.
 		{
 			Games.Leaderboards.submitScore(this.mHelper.getApiClient(), this.getString(R.string.leaderboard_flung_top_scores), GameManager.newHighScore);
-			Log.d("UPdatingScore", "TO THE WEB");
+			
 			GameManager.newHighScore = 0;
 		}
 		
@@ -371,12 +371,11 @@ protected void onRestart() {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
+		
 		if(requestCode == FlungValues.CALL_GAME.ordinal())
 		{
 			//clearing!
-			GameConstants.floatingStructures.clear();
-			GameConstants.borders.clear();
-			GameConstants.PowerUps.clear();
+			GameConstants.clearLists();
 			showScore();
 			
 		}
@@ -384,12 +383,12 @@ protected void onRestart() {
 		uiHelper.onActivityResult(requestCode, resultCode, data, new FacebookDialog.Callback() {
 	        @Override
 	        public void onError(FacebookDialog.PendingCall pendingCall, Exception error, Bundle data) {
-	            Log.e("Activity", String.format("Error: %s", error.toString()));
+	            
 	        }
 
 	        @Override
 	        public void onComplete(FacebookDialog.PendingCall pendingCall, Bundle data) {
-	            Log.i("Activity", "Success!");
+	            
 	        }
 	    });
 		

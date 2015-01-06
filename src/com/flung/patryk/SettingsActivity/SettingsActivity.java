@@ -85,7 +85,7 @@ public class SettingsActivity extends Activity {
 		//GRAVITY USE
 		final ImageButton gravityButton = (ImageButton)findViewById(R.id.onoffgravity);
 		GameManager.SELF.UseGravity = 0 != GameManager.usingGravity;
-		Log.d("GRAVITY: ", "GameMan: " + GameManager.SELF.UseGravity + "  GameValue: " + GameManager.usingGravity);
+		//Log.d("GRAVITY: ", "GameMan: " + GameManager.SELF.UseGravity + "  GameValue: " + GameManager.usingGravity);
 		if(!GameManager.SELF.UseGravity)
 		{
 		gravityButton.setImageDrawable(context.getResources().getDrawable(drawable.buttonoff)); 

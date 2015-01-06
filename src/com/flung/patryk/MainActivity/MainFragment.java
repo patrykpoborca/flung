@@ -27,7 +27,7 @@ public class MainFragment extends Fragment {
 	    uiHelper = new UiLifecycleHelper(getActivity(), callback);
 	    uiHelper.onCreate(savedInstanceState);
 	    
-	    ArrayList<String> permissions = new ArrayList<String>();
+	    ArrayList<String> permissions = new ArrayList<String>(); 
 	    permissions.add("friends_games_activity");
 	    //Session.NewPermissionsRequest permRequest = new Session.NewPermissionsRequest(this, permissions);
 	}
@@ -54,11 +54,11 @@ public class MainFragment extends Fragment {
 	
 	private void onSessionStateChange(Session session, SessionState state, Exception exception) {
 	    if (state.isOpened()) {  
-	        Log.i(TAG, "Logged in...");
+	      //  Log.i(TAG, "Logged in...");
 	        this.getActivity().findViewById(R.id.sharebutton).setVisibility(View.VISIBLE);
 	    } else if (state.isClosed()) {
 	    	this.getActivity().findViewById(R.id.sharebutton).setVisibility(View.GONE);
-	        Log.i(TAG, "Logged out...");
+	      //  Log.i(TAG, "Logged out...");
 	    }
 	}
 	

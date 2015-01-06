@@ -31,7 +31,7 @@ public class ReflectionHelper {
 		}
 		catch(Exception e)
 		{
-			Log.d("CreateParsed String", "ERROR" + e);
+			
 			return null;
 		}
 		
@@ -132,7 +132,7 @@ public class ReflectionHelper {
 				
 			}
 		}catch(Exception e){
-			Log.d("Error: ", e.toString());
+			
 		}
 	}
 	

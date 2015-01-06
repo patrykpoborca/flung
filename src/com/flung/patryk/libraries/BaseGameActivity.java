@@ -119,6 +119,7 @@ public abstract class BaseGameActivity extends FragmentActivity implements
 
     @Override
     protected void onActivityResult(int request, int response, Intent data) {
+    	
         super.onActivityResult(request, response, data);
         mHelper.onActivityResult(request, response, data);
     }

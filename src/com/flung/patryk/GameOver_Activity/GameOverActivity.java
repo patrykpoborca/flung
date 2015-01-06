@@ -84,7 +84,7 @@ public class GameOverActivity extends Activity {
 		hsBox.setText(""+ GameManager.PLAYER_POINTS);
 		
 		TextView summary = (TextView)findViewById( R.id.PostGame_Text);
-		Log.d("BUTNOT", "dfd");
+		
 		String text = "Lives remaining= " + GameManager.getPlayerLives();
 		text += "\nSwipes Used = " + GameManager.SWIPE_COUNT + " / " +((GameManager.SWIPE_LIMIT == -1) ? "unlimited" : GameManager.SWIPE_LIMIT); 
 		summary.setText(text);

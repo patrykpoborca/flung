@@ -1,6 +1,6 @@
 package com.flung.patryk.Game_Utility;
 
-import android.util.Log;
+
 
 public class FloatPoint {
 	public float X;

@@ -162,7 +162,7 @@ public static FloatLine generateNonCollisionLine()
 
 		if(!GameConstants.intersectsObjects(temporary)) break;
 	}
-	//Log.d("ADDING!", "HELLo...");
+	
 	width= splitRatio * Magnitude; 
 	height = Magnitude - width;
 	y_range = (float)GameConstants.screenSizeY * outOfBoundsRatio;
@@ -321,7 +321,7 @@ public static void startTimer_Line(final int PID)
 				startTimer_Line(PID);
 				return;
 			}
-			//Log.d("TimerCall", " bleh");
+			
 			createLine();
 			startTimer_Line(PID);
 			

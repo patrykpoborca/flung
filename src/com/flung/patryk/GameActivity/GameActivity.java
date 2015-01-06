@@ -15,7 +15,7 @@ import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
+
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
@@ -90,7 +90,8 @@ public class GameActivity extends Activity {
 	}
 	@Override
 	protected void onPause() {
-		Log.d("WASI", "CALLED");
+		this.PANEL.stopThreads();
+		GameConstants.clearLists();
 		super.onPause();
 	}
 	

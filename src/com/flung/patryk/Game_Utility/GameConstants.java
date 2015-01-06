@@ -39,7 +39,12 @@ final public class GameConstants {
 	
 	
 	
-
+	public static void clearLists()
+	{
+		GameConstants.floatingStructures.clear();
+		GameConstants.borders.clear();
+		GameConstants.PowerUps.clear();
+	}
 	
 		
 	//gets you the SAFE diagonal ratio

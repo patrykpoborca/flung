@@ -111,7 +111,7 @@ final public class MetaPlayerData {
 		try {
 			FileOutputStream stream = new FileOutputStream(file);
 			byte bytearray[]= ReflectionHelper.createParsedString_as_bytes(GameManager.SELF);
-			Log.d("PreWRITE", new String(bytearray));
+			
 			stream.write(bytearray);
 		    stream.close();
 		    

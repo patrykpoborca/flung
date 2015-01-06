@@ -74,7 +74,7 @@ public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
          *                                            occurred.
          */
         void onSignInFailed();
-
+ 
         /** Called when sign-in succeeds. */
         void onSignInSucceeded();
     }

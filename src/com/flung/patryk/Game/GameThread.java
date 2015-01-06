@@ -71,7 +71,7 @@ public class GameThread extends Thread {
 						framesSkipped++;
 					}
 					
-				}
+				} 
 			} finally {
 				// in case of an exception the surface is not left in 
 				// an inconsistent state

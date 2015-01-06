@@ -19,7 +19,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Rect;
-import android.util.Log;
+
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -138,7 +138,7 @@ public class MainGamePanel extends SurfaceView implements
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		Log.d(TAG, "Surface is being destroyed");
+		
 		// tell the thread to shut down and wait for it to finish
 		// this is a clean shutdown
 		boolean retry = true;
@@ -150,7 +150,7 @@ public class MainGamePanel extends SurfaceView implements
 				// try again shutting down the thread
 			}
 		}
-		Log.d(TAG, "Thread was shut down cleanly");
+		
 	}
 	
 	//utility method (Draw line, changes color based on magnitude)
@@ -346,14 +346,14 @@ public class MainGamePanel extends SurfaceView implements
 		
 			playerOne.update();
 		// Update 
-			//Log.d("COUNT:", ""+ GameConstants.floatingStructures.size());
+			
 		for(int a=0; a < GameConstants.floatingStructures.size(); a++)
 		{
 			if(GameConstants.floatingStructures.size() == a)break;
 			
 			if(GameConstants.floatingStructures.get(a).outOfBounds())
 			{
-				//Log.d("Finding SELF", "Working...  " + GameConstants.floatingStructures.size());
+				
 				int exitVal= -1;
 				for(int iterator=0; iterator < GameConstants.floatingStructures.size(); iterator++)
 				{
