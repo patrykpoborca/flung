@@ -7,3 +7,6 @@ Setup:
  2) Onces those are set up, the project should be able to be built. (You will have to set up your own Leaderboard/appid (for google/facebook integration)
  
  3) Then you're finished
+ 
+ Google Play version:
+ https://play.google.com/store/apps/details?id=com.flung.patryk
